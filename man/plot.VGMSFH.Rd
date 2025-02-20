@@ -4,7 +4,7 @@
 \alias{plot.VGMSFH}
 \title{Plot VGMSFH result.}
 \usage{
-\method{plot}{VGMSFH}(object, shp, var_idx = 1, field = "y_hat", ...)
+\method{plot}{VGMSFH}(object, shp, var_idx = 1, field = "yhat_samples", ...)
 }
 \arguments{
 \item{object}{An object containing the VGMSFH results.}

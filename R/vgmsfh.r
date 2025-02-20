@@ -133,7 +133,7 @@ summary.VGMSFH <- function(object, var_idx = 1, field = "beta") {
 #' @importFrom ggplot2 theme_minimal
 #' @importFrom ggplot2 scale_fill_viridis_c
 #' @importFrom gridExtra grid.arrange
-plot.VGMSFH <- function(object, shp, var_idx = 1, field = "y_hat", ...) {
+plot.VGMSFH <- function(object, shp, var_idx = 1, field = "yhat_samples", ...) {
   var <- slot(object, field)[, , var_idx]
   shp["mean"] <- apply(var, 2, mean)
   shp["std"] <- apply(var, 2, sd)
@@ -188,7 +188,7 @@ coef.VGMSFH <- function(object, var_idx = 1, type = "fixed") {
 }
 
 #' @export
-confint.VGMSFH <- function(object, var_idx = 1, field = "y_hat") {
+confint.VGMSFH <- function(object, var_idx = 1, field = "yhat_samples") {
   var_lower <- apply(slot(object, field)[, , var_idx], 2, quantile, 0.025)
   var_upper <- apply(slot(object, field)[, , var_idx], 2, quantile, 0.975)
   var_confint <- data.frame(lower = var_lower, upper = var_upper)

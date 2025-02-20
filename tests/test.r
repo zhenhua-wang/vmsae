@@ -42,7 +42,7 @@ model <- vgmsfh_numpyro(y, y_sigma, X, W,
   GEOID = acs_data$GEOID,
   vae_model_name = vae_name, vae_save_dir = NULL,
   num_samples = num_samples, num_warmup = num_samples)
-y_hat_np <- model@yhat
+y_hat_np <- model@yhat_samples
 y_hat_mean_np <- apply(y_hat_np, c(2, 3), mean)
 y_hat_lower_np <- apply(y_hat_np, c(2, 3), quantile, 0.025)
 y_hat_upper_np <- apply(y_hat_np, c(2, 3), quantile, 0.975)
