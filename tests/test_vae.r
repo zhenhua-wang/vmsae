@@ -2,7 +2,7 @@ library(sf)
 library(tidyverse)
 library(spdep)
 library(reticulate)
-library(VMSAE)
+library(vmsae)
 install_environment()
 load_environment()
 
@@ -12,7 +12,7 @@ geography <- "county"
 acs_data <-
   read_sf(system.file("data", sprintf("%s_%s.shp",
     tolower(state), tolower(geography)),
-    package = "VMSAE")) %>%
+    package = "vmsae")) %>%
   mutate(
     var = (moe / 1.645)^2,
     estimate_log = log(estimate),

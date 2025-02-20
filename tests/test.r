@@ -12,7 +12,7 @@ geography <- "county"
 shp_name <- sprintf("%s_%s.shp", tolower(state), tolower(geography))
 vae_name <- sprintf("%s_%s", state, geography)
 acs_data <-
-  read_sf(system.file("data", shp_name, package = "VMSAE")) %>%
+  read_sf(system.file("data", shp_name, package = "vmsae")) %>%
   mutate(
     var = (moe / 1.645)^2,
     estimate_log = log(estimate),
@@ -47,7 +47,7 @@ y_hat_mean_np <- apply(y_hat_np, c(2, 3), mean)
 y_hat_lower_np <- apply(y_hat_np, c(2, 3), quantile, 0.025)
 y_hat_upper_np <- apply(y_hat_np, c(2, 3), quantile, 0.975)
 
-## remove.packages("VMSAE")
+## remove.packages("vmsae")
 ## devtools::install(".")
 plot(pos_samples, acs_data)
 

@@ -17,10 +17,10 @@ install_environment <- function(envname = "vmsae") {
 #' @param envname String, string path to python virtual environment.
 #' @export
 load_environment <- function(envname = "vmsae") {
-  vgmcar_module <- system.file("py", "vgmcar.py", package = "VMSAE")
-  vae_module <- system.file("py", "vae.py", package = "VMSAE")
-  train_vae_module <- system.file("py", "train_vae.py", package = "VMSAE")
-  car_dataset_module <- system.file("py", "car_dataset.py", package = "VMSAE")
+  vgmcar_module <- system.file("py", "vgmcar.py", package = "vmsae")
+  vae_module <- system.file("py", "vae.py", package = "vmsae")
+  train_vae_module <- system.file("py", "train_vae.py", package = "vmsae")
+  car_dataset_module <- system.file("py", "car_dataset.py", package = "vmsae")
   reticulate::use_virtualenv(envname, required = TRUE)
   reticulate::py_config()
   reticulate::source_python(vgmcar_module)

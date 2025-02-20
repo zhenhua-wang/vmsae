@@ -67,11 +67,11 @@ vgmsfh_stan <- function(y, y_sigma, X, W, GEOID,
 
   if (stan_input$p_y == 1) {
     stan_model <- cmdstanr::cmdstan_model(
-      system.file("stan", "vsfh.stan", package = "VMSAE"))
+      system.file("stan", "vsfh.stan", package = "vmsae"))
   }
   else {
     stan_model <- cmdstanr::cmdstan_model(
-      system.file("stan", "vgmsfh.stan", package = "VMSAE"))
+      system.file("stan", "vgmsfh.stan", package = "vmsae"))
   }
   stan_fit <- stan_model$sample(
     data = stan_input,
@@ -142,10 +142,10 @@ load_vae <- function(vae_model_name, vae_save_dir = NULL) {
   vae_full_name <- paste0(tolower(vae_model_name), ".model")
   if (is.null(vae_save_dir)) {
     vae_model <- py$torch$load(
-      system.file("model", vae_full_name, package = "VMSAE"),
+      system.file("model", vae_full_name, package = "vmsae"),
       weights_only = TRUE)
     GEOID <- read.table(
-      system.file("model", GEOID_name, package = "VMSAE"),
+      system.file("model", GEOID_name, package = "vmsae"),
       header = FALSE)
   } else {
     vae_model <- py$torch$load(
