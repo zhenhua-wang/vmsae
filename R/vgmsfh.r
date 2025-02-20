@@ -100,6 +100,7 @@ vgmsfh_stan <- function(y, y_sigma, X, W, GEOID,
 #' @param y_sigma Matrix, reported standard deviations.
 #' @param X Matrix, covariance matrix.
 #' @param W Matrix, proximity matrix
+#' @param GEOID Vector, FIPS codes or other equivalent GEOIDs.
 #' @param vae_model_name String, vae model name.
 #' @param vae_save_dir String, vae model saving directory.
 #' @param num_samples Int, Number of posterior samples.

@@ -48,7 +48,7 @@ y_hat_lower_np <- apply(y_hat_np, c(2, 3), quantile, 0.025)
 y_hat_upper_np <- apply(y_hat_np, c(2, 3), quantile, 0.975)
 
 ## remove.packages("vmsae")
-## devtools::install(".")
+## devtools::document();devtools::install(".")
 plot(pos_samples, acs_data)
 
 stan_samples <- vgmsfh_stan(y, y_sigma, X, W,

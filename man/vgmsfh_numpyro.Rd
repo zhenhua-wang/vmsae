@@ -25,6 +25,8 @@ vgmsfh_numpyro(
 
 \item{W}{Matrix, proximity matrix}
 
+\item{GEOID}{Vector, FIPS codes or other equivalent GEOIDs.}
+
 \item{vae_model_name}{String, vae model name.}
 
 \item{vae_save_dir}{String, vae model saving directory.}
