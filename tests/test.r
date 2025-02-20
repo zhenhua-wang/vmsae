@@ -38,15 +38,15 @@ X <- acs_data %>%
 W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
 
 num_samples <- 10000
-pos_samples <- vgmsfh_numpyro(y, y_sigma, X, W,
+model <- vgmsfh_numpyro(y, y_sigma, X, W,
   GEOID = acs_data$GEOID,
   vae_model_name = vae_name, vae_save_dir = NULL,
   num_samples = num_samples, num_warmup = num_samples)
-y_hat_np <- pos_samples@y_hat
+y_hat_np <- model@yhat
 y_hat_mean_np <- apply(y_hat_np, c(2, 3), mean)
 y_hat_lower_np <- apply(y_hat_np, c(2, 3), quantile, 0.025)
 y_hat_upper_np <- apply(y_hat_np, c(2, 3), quantile, 0.975)
 
 ## remove.packages("vmsae")
 ## devtools::document();devtools::install(".")
-plot(pos_samples, acs_data)
+plot(model, acs_data)

@@ -10,12 +10,12 @@ setClass("VAE",
 
 setClass("VGMSFH",
   slots = c(
-    y_hat = "array",
-    mu = "array",
-    beta = "array",
-    delta = "array",
-    delta_sigma2 = "array",
-    car = "array"
+    yhat_samples = "array",
+    mu_samples = "array",
+    beta_samples = "array",
+    delta_samples = "array",
+    car_samples = "array",
+    all_samples = "list"
   )
 )
 
@@ -54,12 +54,12 @@ vgmsfh_numpyro <- function(y, y_sigma, X, W, GEOID,
     p_y, data$y, data$y_sigma, data$X, data$W, W_in, B_in, W_out, B_out,
     num_samples, num_warmup)
   vgmsfh <- new("VGMSFH",
-    y_hat = samples$y_hat,
-    mu = samples$mu,
-    beta = samples$beta,
-    delta = samples$delta,
-    delta_sigma2 = samples$delta_sigma2,
-    car = samples$car)
+    yhat_samples = samples$y_hat,
+    mu_samples = samples$mu,
+    beta_samples = samples$beta,
+    delta_samples = samples$delta,
+    car_samples = samples$car,
+    all_samples = samples)
   return(vgmsfh)
 }
 
