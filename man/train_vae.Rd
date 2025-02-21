@@ -9,15 +9,19 @@ train_vae(
   GEOID,
   vae_model_name,
   vae_save_dir = ".",
-  n_samples,
-  batch_size,
-  epoch,
+  n_samples = 10000,
+  batch_size = 256,
+  epoch = 10000,
   lr_init = 0.001,
   lr_min = 1e-07
 )
 }
 \arguments{
 \item{W}{Matrix, proximity matrix.}
+
+\item{vae_model_name, }{String, trained VAE model name.}
+
+\item{vae_save_dir, }{String, directory to save the trained VAE model.}
 
 \item{n_samples, }{Int, number of training samples drawn from the prior.}
 
@@ -28,8 +32,6 @@ train_vae(
 \item{lr_init, }{Float, initial learning rate.}
 
 \item{lr_min, }{Float, reduced learning rate at the last epoch.}
-
-\item{save_path, }{String, path to save the trained VAE model.}
 }
 \description{
 This function trains a VAE that learn the conditional autoregressive prior.

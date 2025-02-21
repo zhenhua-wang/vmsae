@@ -3,7 +3,8 @@
 #' This function trains a VAE that learn the conditional autoregressive prior.
 #'
 #' @param W Matrix, proximity matrix.
-#' @param save_path, String, path to save the trained VAE model.
+#' @param vae_model_name, String, trained VAE model name.
+#' @param vae_save_dir, String, directory to save the trained VAE model.
 #' @param n_samples, Int, number of training samples drawn from the prior.
 #' @param batch_size, Int, batch size of VAE.
 #' @param epoch, Int epoch of VAE.
@@ -11,7 +12,7 @@
 #' @param lr_min, Float, reduced learning rate at the last epoch.
 #' @export
 train_vae <- function(W, GEOID, vae_model_name, vae_save_dir = ".",
-                      n_samples, batch_size, epoch,
+                      n_samples = 10000, batch_size = 256, epoch = 10000,
                       lr_init = 0.001, lr_min = 1e-7) {
   vae_model_name <- tolower(vae_model_name)
   vae_save_path <- file.path(

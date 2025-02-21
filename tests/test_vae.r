@@ -29,4 +29,4 @@ loss <- train_vae(W = W,
   vae_save_dir = ".",
   n_samples = 10000,
   batch_size = 256,
-  epoch = 3)
+  epoch = 10000)
