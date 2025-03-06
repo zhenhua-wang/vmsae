@@ -34,7 +34,7 @@ W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
 num_samples <- 10000
 model <- vgmsfh_numpyro(y, y_sigma, X, W,
   GEOID = acs_data$GEOID,
-  vae_model_name = "mo_county", vae_save_dir = NULL,
+  model_name = "mo_county", save_dir = NULL,
   num_samples = num_samples, num_warmup = num_samples)
 y_hat_np <- model@yhat_samples
 y_hat_mean_np <- apply(y_hat_np, c(2, 3), mean)

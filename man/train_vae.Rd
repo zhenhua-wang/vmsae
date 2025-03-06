@@ -54,8 +54,8 @@ W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
 
 loss <- train_vae(W = W,
   GEOID = acs_data$GEOID,
-  vae_model_name = "test",
-  vae_save_dir = ".",
+  model_name = "test",
+  save_dir = ".",
   n_samples = 10000,
   batch_size = 256,
   epoch = 10000)

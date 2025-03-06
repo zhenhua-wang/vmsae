@@ -10,8 +10,8 @@ vgmsfh_numpyro(
   X,
   W,
   GEOID,
-  vae_model_name,
-  vae_save_dir = NULL,
+  model_name,
+  save_dir = NULL,
   num_warmup = 1000,
   num_samples = 1000
 )
@@ -27,9 +27,9 @@ vgmsfh_numpyro(
 
 \item{GEOID}{Vector, FIPS codes or other equivalent GEOIDs.}
 
-\item{vae_model_name}{String, vae model name.}
+\item{model_name}{String, vae model name.}
 
-\item{vae_save_dir}{String, vae model saving directory. Default to use pretrained models.}
+\item{save_dir}{String, vae model saving directory. Default to use pretrained models.}
 
 \item{num_warmup}{Int, Number of burning-in. Default to 1000.}
 
