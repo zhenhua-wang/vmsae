@@ -2,13 +2,13 @@
 % Please edit documentation in R/vae.r
 \name{train_vae}
 \alias{train_vae}
-\title{Train VAE for spatial random effect.}
+\title{Train VAE for CAR prior.}
 \usage{
 train_vae(
   W,
   GEOID,
-  vae_model_name,
-  vae_save_dir = ".",
+  model_name,
+  save_dir = ".",
   n_samples = 10000,
   batch_size = 256,
   epoch = 10000,
@@ -19,20 +19,44 @@ train_vae(
 \arguments{
 \item{W}{Matrix, proximity matrix.}
 
-\item{vae_model_name, }{String, trained VAE model name.}
+\item{model_name, }{String, trained VAE model name in lower case.}
 
-\item{vae_save_dir, }{String, directory to save the trained VAE model.}
+\item{save_dir, }{String, directory to save the trained VAE model. Default to the current directory.}
 
-\item{n_samples, }{Int, number of training samples drawn from the prior.}
+\item{n_samples, }{Int, number of training samples drawn from the prior. Default to 10,000.}
 
-\item{batch_size, }{Int, batch size of VAE.}
+\item{batch_size, }{Int, batch size of VAE. Default to 256.}
 
-\item{epoch, }{Int epoch of VAE.}
+\item{epoch, }{Int epoch of VAE. Default to 10,000.}
 
-\item{lr_init, }{Float, initial learning rate.}
+\item{lr_init, }{Float, initial learning rate. Default to 0.001.}
 
-\item{lr_min, }{Float, reduced learning rate at the last epoch.}
+\item{lr_min, }{Float, reduced learning rate at the last epoch. Default to 1e-7.}
+}
+\value{
+A list that contains the total loss, reconstructed error and KL divergence of VAE
 }
 \description{
-This function trains a VAE that learn the conditional autoregressive prior.
+Train a Variational Autoencoder to learn the spatial structure of the Conditional Autoregressive prior and save the parameters in each layer, which can later be used as the generator in the Hamiltonian Monte Carlo step.
+}
+\examples{
+library(sf)
+library(tidyverse)
+library(spdep)
+library(vmsae)
+install_environment()
+load_environment()
+
+acs_data <-
+  read_sf(system.file("data", "mo_county.shp", package = "vmsae")) \%>\%
+  na.omit()
+W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
+
+loss <- train_vae(W = W,
+  GEOID = acs_data$GEOID,
+  vae_model_name = "test",
+  vae_save_dir = ".",
+  n_samples = 10000,
+  batch_size = 256,
+  epoch = 10000)
 }

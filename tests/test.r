@@ -1,18 +1,12 @@
 library(sf)
 library(tidyverse)
-library(cmdstanr)
 library(spdep)
-library(reticulate)
 library(vmsae)
 install_environment()
 load_environment()
 
-state <- "mo"
-geography <- "county"
-shp_name <- sprintf("%s_%s.shp", tolower(state), tolower(geography))
-vae_name <- sprintf("%s_%s", state, geography)
 acs_data <-
-  read_sf(system.file("data", shp_name, package = "vmsae")) %>%
+  read_sf(system.file("data", "mo_county.shp", package = "vmsae")) %>%
   mutate(
     var = (moe / 1.645)^2,
     estimate_log = log(estimate),
@@ -40,13 +34,13 @@ W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
 num_samples <- 10000
 model <- vgmsfh_numpyro(y, y_sigma, X, W,
   GEOID = acs_data$GEOID,
-  vae_model_name = vae_name, vae_save_dir = NULL,
+  vae_model_name = "mo_county", vae_save_dir = NULL,
   num_samples = num_samples, num_warmup = num_samples)
 y_hat_np <- model@yhat_samples
 y_hat_mean_np <- apply(y_hat_np, c(2, 3), mean)
 y_hat_lower_np <- apply(y_hat_np, c(2, 3), quantile, 0.025)
 y_hat_upper_np <- apply(y_hat_np, c(2, 3), quantile, 0.975)
 
+plot(model, acs_data)
 ## remove.packages("vmsae")
 ## devtools::document();devtools::install(".")
-plot(model, acs_data)

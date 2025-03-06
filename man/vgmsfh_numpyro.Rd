@@ -29,15 +29,15 @@ vgmsfh_numpyro(
 
 \item{vae_model_name}{String, vae model name.}
 
-\item{vae_save_dir}{String, vae model saving directory.}
+\item{vae_save_dir}{String, vae model saving directory. Default to use pretrained models.}
 
-\item{num_warmup}{Int, Number of burning-in.}
+\item{num_warmup}{Int, Number of burning-in. Default to 1000.}
 
-\item{num_samples}{Int, Number of posterior samples.}
+\item{num_samples}{Int, Number of posterior samples. Default to 1000.}
 }
 \value{
-Matrix, the true process.
+VGMSFH s4 object, which contains the direct estimate and the posterior samples of yhat (population process), mu (intercept of population process), beta (coefficient of covariates), delta (fine scale variations of population process), car (spatial random effects of population process). In addition, all other posteriors (bridging variables, variations of random effects) including all meantioned before are provided in "all_samples".
 }
 \description{
-This function runs vgmsfh using numpyro as the backend.
+Run vgmsfh using numpyro as the backend.
 }
