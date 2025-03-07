@@ -3,57 +3,69 @@
 #' This function plot the spatial map of VGMSFH result.
 #'
 #' @param object An object containing the VGMSFH results.
+#' @param shp The shapefile that contains the geometry. If null, this is downloaded from the pretrain model.
 #' @param var_idx Index of the variable of interest.
-#' @param field The field from the object to plot.
+#' @param type Type of plots. "compare" is the plot comparing direct estimate and model estimate. "estimate" is the plot that shows the mean and standard deviation of the model estimate.
 #' @export
+setMethod("plot", "VGMSFH",
+  function(x, shp = NULL, var_idx = 1, type = "compare") {
+    if (is.null(shp)) {
+      ## download shapefile from pretrained model
+      shp <- load_shapefile_from_url(x@model_name,  "https://github.com/zhenhua-wang/VMSAE_resources/tree/main/shp_processed/")
+    }
+    if (type == "estimate") {
+      plot_estimate(x, shp, var_idx)
+    } else if(type == "compare") {
+      plot_compare(x, shp, var_idx)
+    } else {
+      warning("Plot type not supported.")
+    }
+  })
+
 #' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
 #' @importFrom ggplot2 geom_sf
-#' @importFrom ggplot2 theme_minimal
 #' @importFrom ggplot2 scale_fill_viridis_c
+#' @importFrom tidyr pivot_longer
 #' @importFrom gridExtra grid.arrange
-plot.VGMSFH <- function(object, shp = NULL, var_idx = 1, field = "yhat_samples", ...) {
-  if (is.null(shp)) {
-    ## download shapefile from pretrained model
-    shp <- load_shapefile_from_url(object@model_name,
-      "https://github.com/zhenhua-wang/VMSAE_resources/tree/main/shp_processed")
-  }
-  var <- slot(object, field)[, , var_idx]
+plot_estimate <- function(object, shp, var_idx) {
+  var <- slot(object, "yhat_samples")[, , var_idx]
   shp["mean"] <- apply(var, 2, mean)
   shp["std"] <- apply(var, 2, sd)
-  shp["lower"] <- apply(var, 2, quantile, 0.025)
-  shp["upper"] <- apply(var, 2, quantile, 0.975)
-  range_min <- min(shp$mean, shp$lower, shp$upper, na.rm = TRUE)
-  range_max <- max(shp$mean, shp$lower, shp$upper, na.rm = TRUE)
-  breaks_mean <- round(
-    seq(floor(min(shp$lower)), ceiling(max(shp$upper)),
-      length.out = 8), 2)
   p1 <- ggplot() +
     geom_sf(data = shp, aes(fill = mean)) +
     scale_fill_viridis_c(name = "Mean",
-      breaks = breaks_mean,
-      limits = c(range_min, range_max),
-      option = "D") +
-    theme_minimal()
+      option = "D")
   p2 <- ggplot() +
     geom_sf(data = shp, aes(fill = std)) +
     scale_fill_viridis_c(name = "Std. Dev.",
-      option = "C") +
-    theme_minimal()
-  p3 <- ggplot() +
-    geom_sf(data = shp, aes(fill = lower)) +
-    scale_fill_viridis_c(name = "Lower Bound (2.5%)",
-      breaks = breaks_mean,
-      limits = c(range_min, range_max),
-      option = "D") +
-    theme_minimal()
-  p4 <- ggplot() +
-    geom_sf(data = shp, aes(fill = upper)) +
-    scale_fill_viridis_c(name = "Upper Bound (97.5%)",
-      breaks = breaks_mean,
-      limits = c(range_min, range_max),
-      option = "D") +
-    theme_minimal()
-  grid.arrange(p1, p2, p3, p4, nrow = 2)
+      option = "C")
+  grid.arrange(p1, p2, nrow = 1)
+}
+
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_sf
+#' @importFrom ggplot2 facet_wrap
+#' @importFrom ggplot2 scale_fill_viridis_c
+#' @importFrom tidyr pivot_longer
+plot_compare <- function(object, shp, var_idx) {
+  var <- slot(object, "yhat_samples")[, , var_idx]
+  shp["direct estimate"] <- slot(object, "direct_estimate")[, var_idx]
+  shp["vgmsfh mean"] <- apply(var, 2, mean)
+  shp["vgmsfh lower"] <- apply(var, 2, quantile, 0.025)
+  shp["vgmsfh upper"] <- apply(var, 2, quantile, 0.975)
+  cols <- c("direct estimate", "vgmsfh mean", "vgmsfh lower", "vgmsfh upper")
+  shp <- shp %>%
+    pivot_longer(
+      cols = cols,
+      names_to = "type",
+      values_to = "value")
+  shp$type <- factor(shp$type, levels = cols)
+  ggplot(shp) +
+    geom_sf(aes(fill = value)) +
+    scale_fill_viridis_c(option = "D") +
+    facet_wrap(~ type, nrow = 2, ncol = 2)
 }
 
 #' @importFrom sf st_read
