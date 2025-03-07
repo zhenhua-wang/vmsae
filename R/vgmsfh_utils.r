@@ -81,7 +81,7 @@ load_pretrained_shapefile <- function(model_name) {
       download.file(urls[i], file_paths[i], mode = "wb")
     }
   }, error = function(e) {
-    cat("Error:", model_name, "could not be found.\n")
+    cat("Error:", model_name, "could not be found. Please provide the necessary shapefiles in plot function.\n")
   })
   ## load into sf
   shp_path <- file.path(save_dir, grep("shp$", files, value = TRUE))
