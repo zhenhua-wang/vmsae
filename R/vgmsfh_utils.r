@@ -70,7 +70,7 @@ plot_compare <- function(object, shp, var_idx) {
 
 #' @importFrom sf st_read
 load_pretrained_shapefile <- function(model_name) {
-  base_url <-  "https://github.com/zhenhua-wang/vmsae_resources/tree/main/shp_processed/"
+  base_url <-  "https://raw.githubusercontent.com/zhenhua-wang/vmsae_resources/refs/heads/main/shp_processed/"
   ## download shapefiles
   files <- paste0(model_name, c(".cpg", ".dbf", ".prj", ".shp", ".shx"))
   urls <- paste0(base_url, files)
