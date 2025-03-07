@@ -41,6 +41,6 @@ y_hat_mean_np <- apply(y_hat_np, c(2, 3), mean)
 y_hat_lower_np <- apply(y_hat_np, c(2, 3), quantile, 0.025)
 y_hat_upper_np <- apply(y_hat_np, c(2, 3), quantile, 0.975)
 
-plot(model, acs_data, type = "compare", var_idx = 2)
+plot(model, shp = acs_data, type = "compare", var_idx = 2)
 ## remove.packages("vmsae")
 ## devtools::document();devtools::install(".")
