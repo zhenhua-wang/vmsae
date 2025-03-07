@@ -11,7 +11,7 @@ setMethod("plot", "VGMSFH",
   function(x, shp = NULL, var_idx = 1, type = "compare") {
     if (is.null(shp)) {
       ## download shapefile from pretrained model
-      shp <- load_shapefile_from_url(x@model_name,  "https://github.com/zhenhua-wang/VMSAE_resources/tree/main/shp_processed/")
+      shp <- load_pretrained_shapefile(x@model_name)
     }
     if (type == "estimate") {
       plot_estimate(x, shp, var_idx)
@@ -69,17 +69,22 @@ plot_compare <- function(object, shp, var_idx) {
 }
 
 #' @importFrom sf st_read
-load_shapefile_from_url <- function(name, base_url) {
+load_pretrained_shapefile <- function(model_name) {
+  base_url <-  "https://github.com/zhenhua-wang/VMSAE_resources/tree/main/shp_processed/"
   ## download shapefiles
-  files <- paste0(name, c(".cpg", ".dbf", ".prj", ".shp", ".shx"))
+  files <- paste0(model_name, c(".cpg", ".dbf", ".prj", ".shp", ".shx"))
   urls <- paste0(base_url, files)
-  temp_dir <- tempdir()
-  file_paths <- file.path(temp_dir, files)
-  for (i in seq_along(urls)) {
-    download.file(urls[i], file_paths[i], mode = "wb")
-  }
+  save_dir = tempdir()
+  file_paths <- file.path(save_dir, files)
+  tryCatch({
+    for (i in seq_along(urls)) {
+      download.file(urls[i], file_paths[i], mode = "wb")
+    }
+  }, error = function(e) {
+    cat("Error:", model_name, "could not be found.\n")
+  })
   ## load into sf
-  shp_path <- file.path(temp_dir, grep("shp$", files, value = TRUE))
+  shp_path <- file.path(save_dir, grep("shp$", files, value = TRUE))
   shapefile <- st_read(shp_path)
   return(shapefile)
 }

@@ -33,12 +33,12 @@ load_environment <- function(envname = "vmsae") {
 #'
 #' This function downloads pretrained VAE model and the corresponding GEOID.
 #'
-#' @param vae_model_name String, vae model name. e.g. "mo_county".
+#' @param model_name String, vae model name. e.g. "mo_county".
 #' @export
-download_pretrained_vae <- function(vae_model_name, save_dir) {
+download_pretrained_vae <- function(model_name, save_dir) {
   url <- "https://github.com/zhenhua-wang/VMSAE_resources/blob/main/model/"
-  model_name <- paste0(vae_model_name, ".model")
-  GEOID_name <- paste0(vae_model_name, ".GEOID")
+  model_name <- paste0(model_name, ".model")
+  GEOID_name <- paste0(model_name, ".GEOID")
   model_save_path <- file.path(save_dir, model_name)
   GEOID_save_path <- file.path(save_dir, GEOID_name)
   tryCatch({
@@ -48,8 +48,8 @@ download_pretrained_vae <- function(vae_model_name, save_dir) {
     download.file(
       url = paste0(url, GEOID_name),
       destfile = GEOID_save_path)
-    cat(vae_model_name, "downloaded successfully\n")
+    cat(model_name, "downloaded successfully\n")
   }, error = function(e) {
-    cat("Error:", vae_model_name, "could not be found.\n")
+    cat("Error:", model_name, "could not be found.\n")
   })
 }
