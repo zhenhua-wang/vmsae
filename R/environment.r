@@ -36,7 +36,7 @@ load_environment <- function(envname = "vmsae") {
 #' @param model_name String, vae model name. e.g. "mo_county".
 #' @export
 download_pretrained_vae <- function(model_name, save_dir) {
-  url <- "https://github.com/zhenhua-wang/VMSAE_resources/blob/main/model/"
+  url <- "https://github.com/zhenhua-wang/vmsae_resources/blob/main/model/"
   model_name <- paste0(model_name, ".model")
   GEOID_name <- paste0(model_name, ".GEOID")
   model_save_path <- file.path(save_dir, model_name)

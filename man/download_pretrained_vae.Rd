@@ -4,10 +4,10 @@
 \alias{download_pretrained_vae}
 \title{Download pretrained VAE model.}
 \usage{
-download_pretrained_vae(vae_model_name, save_dir)
+download_pretrained_vae(model_name, save_dir)
 }
 \arguments{
-\item{vae_model_name}{String, vae model name. e.g. "mo_county".}
+\item{model_name}{String, vae model name. e.g. "mo_county".}
 }
 \description{
 This function downloads pretrained VAE model and the corresponding GEOID.
