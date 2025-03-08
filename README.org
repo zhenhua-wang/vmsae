@@ -5,8 +5,51 @@
 
 * Installation
 Install the lastest develop version
-
 #+begin_src ess-r :session :results output :exports both
 devtools::install_github("zhenhua-wang/vmsae")
+#+end_src
+
+* Usage
+Load the package
+#+begin_src ess-r :session :results output :exports both
+library(vmsae)
+#+end_src
+
+Install the python environment
+#+begin_src ess-r :session :results output :exports both
+install_environment()
+#+end_src
+
+Load the python environment
+#+begin_src ess-r :session :results output :exports both
+load_environment()
+#+end_src
+
+Download the pretrained model
+#+begin_src ess-r :session :results output :exports both
+download_pretrained_vae(model_name = "mo_county", save_dir = "./datasets")
+#+end_src
+
+Train VGMSFH using numpyro. GEOID represents FIPS codes or other equivalent identifiers.
+#+begin_src ess-r :session :results output :exports both
+model <- vgmsfh_numpyro(y[, 1], y_sigma, X, W,
+  GEOID = GEOID,
+  model_name = "mo_county", save_dir = "./datasets",
+  num_samples = 10000, num_warmup = 10000)
+#+end_src
+
+Plot the estimation result
+#+begin_src ess-r :session :results output :exports both
+plot(model, type = "compare")
+#+end_src
+
+For multivariate models, we can select a response variable to plot with `var_idx`
+#+begin_src ess-r :session :results output :exports both
+plot(model, type = "compare", var_idx = 1)
+#+end_src
+
+We can also plot the mean and standard deviation of the estimation
+#+begin_src ess-r :session :results output :exports both
+plot(model, type = "estimate", var_idx = 1)
 #+end_src
 
