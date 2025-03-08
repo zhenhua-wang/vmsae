@@ -127,7 +127,9 @@ ith_data <- function(data, var_idx) {
   if (is.null(dim(data))) {
     warning("Univariate data, returning the only response.")
     return(data)
-  } else {
+  } else if (length(dim(data)) == 2) {
+    return(data[, var_idx])
+  } else if (length(dim(data)) == 3) {
     return(data[, , var_idx])
   }
 }
