@@ -9,7 +9,7 @@ Install the lastest develop version
 devtools::install_github("zhenhua-wang/vmsae")
 #+end_src
 
-* Usage
+* Basic Usage
 Load the package
 #+begin_src ess-r :session :results output :exports both
 library(vmsae)
@@ -32,7 +32,7 @@ download_pretrained_vae(model_name = "mo_county", save_dir = "./datasets")
 
 Train VGMSFH using numpyro. GEOID represents FIPS codes or other equivalent identifiers.
 #+begin_src ess-r :session :results output :exports both
-model <- vgmsfh_numpyro(y[, 1], y_sigma, X, W,
+model <- vgmsfh_numpyro(y, y_sigma, X, W,
   GEOID = GEOID,
   model_name = "mo_county", save_dir = "./datasets",
   num_samples = 10000, num_warmup = 10000)
@@ -55,3 +55,21 @@ We can also plot the mean and standard deviation of the estimation
 plot(model, type = "estimate", var_idx = 1)
 #+end_src
 [[file:plot/estimate.png]]
+
+* Train VAE
+
+For advanced user, the following command can be used to train your own generator for spatial random effects. The resulting VAE is saved to the folder `./model`.
+#+begin_src ess-r :session :results output :exports both
+loss <- train_vae(W = W,
+  GEOID = GEOID,
+  model_name = "mo_county",
+  save_dir = "./model",
+  n_samples = 10000,
+  batch_size = 256,
+  epoch = 10000)
+#+end_src
+
+Here, `W` is the adjacency matrix of your geography, which can be produced with `spdep` package. For example,
+#+begin_src ess-r :session :results output :exports both
+W <- nb2mat(poly2nb(mo_county_data), style = "B", zero.policy = TRUE)
+#+end_src
