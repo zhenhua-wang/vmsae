@@ -1,0 +1,12 @@
+#+TITLE: VMSAE
+#+SUBTITLE: Auto-Encoding Variational Multivariate Small Area Estimation
+#+AUTHOR: Zhenhua Wang
+#+SETUPFILE: ~/.emacs.d/resources/OrgFiles/LatexTemplates/zw-latex-article.setup
+
+* Installation
+Install the lastest develop version
+
+#+begin_src ess-r :session :results output :exports both
+devtools::install_github("zhenhua-wang/vmsae")
+#+end_src
+
