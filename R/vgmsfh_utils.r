@@ -29,7 +29,7 @@ setMethod("plot", "VGMSFH",
 #' @importFrom tidyr pivot_longer
 #' @importFrom gridExtra grid.arrange
 plot_estimate <- function(object, shp, var_idx) {
-  var <- slot(object, "yhat_samples")[, , var_idx]
+  var <- ith_data(slot(object, "yhat_samples"))
   shp["mean"] <- apply(var, 2, mean)
   shp["std"] <- apply(var, 2, sd)
   p1 <- ggplot() +
@@ -48,10 +48,11 @@ plot_estimate <- function(object, shp, var_idx) {
 #' @importFrom ggplot2 geom_sf
 #' @importFrom ggplot2 facet_wrap
 #' @importFrom ggplot2 scale_fill_viridis_c
+#' @importFrom dplyr %>%
 #' @importFrom tidyr pivot_longer
 plot_compare <- function(object, shp, var_idx) {
-  var <- slot(object, "yhat_samples")[, , var_idx]
-  shp["direct estimate"] <- slot(object, "direct_estimate")[, var_idx]
+  var <- ith_data(slot(object, "yhat_samples"))
+  shp["direct estimate"] <- ith_data(slot(object, "direct_estimate"))
   shp["vgmsfh mean"] <- apply(var, 2, mean)
   shp["vgmsfh lower"] <- apply(var, 2, quantile, 0.025)
   shp["vgmsfh upper"] <- apply(var, 2, quantile, 0.975)
@@ -96,7 +97,7 @@ load_pretrained_shapefile <- function(model_name) {
 #' @return data frame, summary of VGMSFH result.
 #' @export
 setMethod("summary", "VGMSFH", function(object, var_idx = 1, field = "beta_samples") {
-  var_mean <- apply(slot(object, field)[, , var_idx], 2, mean)
+  var_mean <- apply(ith_data(slot(object, field)), 2, mean)
   var_summary <- confint(object, var_idx, field)
   var_summary["mean"] <- var_mean
   var_summary <- var_summary[, c("mean", "lower", "upper")]
@@ -106,9 +107,9 @@ setMethod("summary", "VGMSFH", function(object, var_idx = 1, field = "beta_sampl
 #' @export
 setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
   if (type == "fixed") {
-    var <- object@beta_samples[, , var_idx]
+    var <- ith_data(object@beta_samples)
   } else if (type == "spatial") {
-    var <- object@spatial_samples[, , var_idx]
+    var <- ith_data(object@spatial_samples)
   }
   var_mean <- apply(var, 2, mean)
   return(var_mean)
@@ -116,8 +117,17 @@ setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
 
 #' @export
 setMethod("confint", "VGMSFH", function(object, var_idx = 1, field = "yhat_samples") {
-  var_lower <- apply(slot(object, field)[, , var_idx], 2, quantile, 0.025)
-  var_upper <- apply(slot(object, field)[, , var_idx], 2, quantile, 0.975)
+  var_lower <- apply(ith_data(slot(object, field)), 2, quantile, 0.025)
+  var_upper <- apply(ith_data(slot(object, field)), 2, quantile, 0.975)
   var_confint <- data.frame(lower = var_lower, upper = var_upper)
   return(var_confint)
 })
+
+ith_data <- function(data, var_idx) {
+  if (is.null(dim(data))) {
+    warning("Univariate data, returning the only response.")
+    return(data)
+  } else {
+    return(data[, , var_idx])
+  }
+}
