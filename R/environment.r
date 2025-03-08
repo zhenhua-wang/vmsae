@@ -36,20 +36,17 @@ load_environment <- function(envname = "vmsae") {
 #' @param model_name String, vae model name. e.g. "mo_county".
 #' @export
 download_pretrained_vae <- function(model_name, save_dir) {
-  url <- "https://github.com/zhenhua-wang/vmsae_resources/raw/refs/heads/main/model/"
-  vae_name <- paste0(model_name, ".model")
-  GEOID_name <- paste0(model_name, ".GEOID")
-  model_save_path <- file.path(save_dir, vae_name)
-  GEOID_save_path <- file.path(save_dir, GEOID_name)
+  url <- "https://zenodo.org/records/14993110/files/%s?download=1"
+  zip_name <- paste0(model_name, ".zip")
+  zip_save_path <- file.path(save_dir, zip_name)
   tryCatch({
     download.file(
-      url = paste0(url, vae_name),
-      destfile = model_save_path)
-    download.file(
-      url = paste0(url, GEOID_name),
-      destfile = GEOID_save_path)
-    cat(vae_name, "downloaded successfully\n")
+      url = sprintf(url, zip_name),
+      destfile = zip_save_path)
+    unzip(zipfile = zip_save_path, exdir = save_dir)
+    file.remove(zip_save_path)
+    cat(model_name, "downloaded successfully\n")
   }, error = function(e) {
-    cat("Error:", vae_name, "could not be found.\n")
+    cat("Error:", model_name, "could not be found.\n")
   })
 }
