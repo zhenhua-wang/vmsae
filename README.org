@@ -30,7 +30,7 @@ Download the pretrained model
 download_pretrained_vae(model_name = "mo_county", save_dir = "./datasets")
 #+end_src
 
-Train =VGMSFH= using numpyro. =GEOID= represents FIPS codes or other equivalent identifiers.
+Train =VGMSFH= using numpyro. Note that =y= and =y_sigma= are =N= by =k= matrix, where =N= represents the number of locations and =k= is the number of response variables. =GEOID= represents FIPS codes or other equivalent identifiers. =W= is the adjacency matrix.
 #+begin_src ess-r :session :results output :exports both
 model <- vgmsfh_numpyro(y, y_sigma, X, W,
   GEOID = GEOID,
