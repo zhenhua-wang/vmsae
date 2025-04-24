@@ -49,16 +49,17 @@ setMethod("plot", "VGMSFH",
 #' @importFrom gridExtra grid.arrange
 #' @importFrom methods slot
 #' @importFrom stats sd
+#' @importFrom rlang .data
 plot_estimate <- function(object, shp, var_idx) {
   var <- ith_data(slot(object, "yhat_samples"), var_idx)
   shp["mean"] <- apply(var, 2, mean)
   shp["std"] <- apply(var, 2, sd)
   p1 <- ggplot() +
-    geom_sf(data = shp, aes(fill = mean)) +
+    geom_sf(data = shp, aes(fill = .data[["mean"]])) +
     scale_fill_viridis_c(name = "Mean",
       option = "D")
   p2 <- ggplot() +
-    geom_sf(data = shp, aes(fill = std)) +
+    geom_sf(data = shp, aes(fill = .data[["std"]])) +
     scale_fill_viridis_c(name = "Std. Dev.",
       option = "C")
   grid.arrange(p1, p2, nrow = 1)
@@ -73,6 +74,7 @@ plot_estimate <- function(object, shp, var_idx) {
 #' @importFrom tidyr pivot_longer
 #' @importFrom methods slot
 #' @importFrom stats quantile
+#' @importFrom rlang .data
 plot_compare <- function(object, shp, var_idx) {
   var <- ith_data(slot(object, "yhat_samples"), var_idx)
   shp["direct estimate"] <- ith_data(slot(object, "direct_estimate"), var_idx)
@@ -87,9 +89,9 @@ plot_compare <- function(object, shp, var_idx) {
       values_to = "value")
   shp$type <- factor(shp$type, levels = cols)
   ggplot(shp) +
-    geom_sf(aes(fill = value)) +
+    geom_sf(aes(fill = .data[["value"]])) +
     scale_fill_viridis_c(option = "D") +
-    facet_wrap(~ type, nrow = 2, ncol = 2)
+    facet_wrap(~ .data[["type"]], nrow = 2, ncol = 2)
 }
 
 #' @importFrom sf st_read

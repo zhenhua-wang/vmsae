@@ -7,7 +7,7 @@ Authors@R: c(
     person("Paul A.", "Parker", email = "pparker1@ucsc.edu", role = c("aut", "res")),
     person("Scott H.", "Holan", email = "holans@missouri.edu", role = c("aut", "res")))
 Description: Variational Autoencoded Multivariate Spatial Fay-Herriot models are designed to efficiently estimate population parameters in small area estimation, Wang, Parker, and Holan (2025) <doi:10.48550/arXiv.2503.14710>. This package implements the variational generalized multivariate spatial Fay-Herriot model (VGMSFH) using NumPyro and PyTorch backends, providing utility functions to load pretrained VAE weights as well as tools to train custom variational autoencoders tailored to users specific applications.
-Imports: dplyr, ggplot2, gridExtra, sf, tidyr, reticulate, methods
+Imports: dplyr, ggplot2, gridExtra, sf, tidyr, reticulate, methods, rlang
 URL: https://github.com/zhenhua-wang/vmsae
 BugReports: https://github.com/zhenhua-wang/vmsae/issues
 License: MIT + file LICENSE
