@@ -68,6 +68,8 @@ setClass("Decoder",
 #'   epoch = 10000)
 #' }
 #'
+#' @importFrom reticulate py
+#'
 #' @export
 train_vae <- function(W, GEOID, model_name, save_dir = ".",
                       n_samples = 10000, batch_size = 256, epoch = 10000,
@@ -101,6 +103,8 @@ train_vae <- function(W, GEOID, model_name, save_dir = ".",
 #' load_environment()
 #' decoder <- load_vae(model_name = "mo_county")
 #' }
+#'
+#' @importFrom reticulate py
 #'
 #' @export
 load_vae <- function(model_name, save_dir = NULL) {

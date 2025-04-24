@@ -98,6 +98,8 @@ setClass("VGMSFH",
 #' plot(model, shp = acs_data, type = "compare", var_idx = 2)
 #' }
 #'
+#' @importFrom reticulate py
+#'
 #' @export
 vgmsfh_numpyro <- function(y, y_sigma, X, W, GEOID,
                            model_name, save_dir = NULL,
