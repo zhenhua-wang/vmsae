@@ -76,7 +76,7 @@ load_environment <- function(envname = "vmsae") {
 #'
 #' @examples
 #' \dontrun{
-#' download_pretrained_vae("vae_spatial", tempdir())
+#' download_pretrained_vae("vae_spatial", ".")
 #' }
 #'
 #' @export

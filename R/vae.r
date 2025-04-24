@@ -55,7 +55,7 @@ setClass("Decoder",
 #' install_environment()
 #' load_environment()
 #'
-#' acs_data <- read_sf(system.file("data", "mo_county.shp", package = "vmsae")) %>%
+#' acs_data <- read_sf(system.file("example_data", "mo_county.shp", package = "vmsae")) %>%
 #'   na.omit()
 #' W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
 #'
@@ -99,7 +99,7 @@ train_vae <- function(W, GEOID, model_name, save_dir = ".",
 #' \dontrun{
 #' install_environment()
 #' load_environment()
-#' decoder <- load_vae(model_name = "test", save_dir = ".")
+#' decoder <- load_vae(model_name = "mo_county")
 #' }
 #'
 #' @export

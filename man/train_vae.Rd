@@ -60,7 +60,7 @@ library(vmsae)
 install_environment()
 load_environment()
 
-acs_data <- read_sf(system.file("data", "mo_county.shp", package = "vmsae")) \%>\%
+acs_data <- read_sf(system.file("example_data", "mo_county.shp", package = "vmsae")) \%>\%
   na.omit()
 W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
 

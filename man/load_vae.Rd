@@ -24,7 +24,7 @@ This function assumes the model was trained and saved using \code{train_vae()}, 
 \dontrun{
 install_environment()
 load_environment()
-decoder <- load_vae(model_name = "test", save_dir = ".")
+decoder <- load_vae(model_name = "mo_county")
 }
 
 }

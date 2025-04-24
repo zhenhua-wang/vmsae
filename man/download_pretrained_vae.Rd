@@ -18,7 +18,7 @@ into a specified directory, and removes the downloaded ZIP file after extraction
 }
 \examples{
 \dontrun{
-download_pretrained_vae("vae_spatial", tempdir())
+download_pretrained_vae("vae_spatial", ".")
 }
 
 }
