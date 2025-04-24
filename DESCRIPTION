@@ -1,9 +1,12 @@
 Package: vmsae
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("Zhenhua", "Wang", , "zhenhua.wang@missouri.edu", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Title: Variational Multivariate Spatial Small Area Estimation
+Version: 0.1.0
+Authors@R: c(
+    person("Zhenhua", "Wang", , "zhenhua.wang@missouri.edu", role = c("aut", "cre")),
+    person("Paul A.", "Parker", email = "pparker1@ucsc.edu", role = c("aut", "res")),
+    person("Scott H.", "Holan", email = "holans@missouri.edu", role = c("aut", "res")))
+Description: Variational Autoencoded Multivariate Spatial Fay-Herriot models are designed to efficiently estimate population parameters in small area estimation, Wang, Parker, and Holan (2025) <doi:10.48550/arXiv.2503.14710>. This package implements the variational generalized multivariate spatial Fay-Herriot model (VGMSFH) using NumPyro and PyTorch backends, providing utility functions to load pretrained VAE weights as well as tools to train custom variational autoencoders tailored to users specific applications.
+Imports: dplyr, ggplot2, gridExtra, sf, tidyr, reticulate
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

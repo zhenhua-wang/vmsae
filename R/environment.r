@@ -11,11 +11,14 @@
 #' install_environment("custom")  # Install into a custom-named environment
 #' }
 #'
+#' @importFrom reticulate install_python
+#' @importFrom reticulate py_install
+#'
 #' @export
 install_environment <- function(envname = "vmsae") {
-  reticulate::install_python()
-  reticulate::py_install("torch", envname = envname)
-  reticulate::py_install("numpyro", envname = envname)
+  install_python()
+  py_install("torch", envname = envname)
+  py_install("numpyro", envname = envname)
 }
 
 #' Load Python Environment and Source Model Modules
@@ -44,18 +47,22 @@ install_environment <- function(envname = "vmsae") {
 #' load_environment("custom") # Load custom virtual environment
 #' }
 #'
+#' @importFrom reticulate use_virtualenv
+#' @importFrom reticulate py_config
+#' @importFrom reticulate source_python
+#'
 #' @export
 load_environment <- function(envname = "vmsae") {
   vgmcar_module <- system.file("py", "vgmcar.py", package = "vmsae")
   vae_module <- system.file("py", "vae.py", package = "vmsae")
   train_vae_module <- system.file("py", "train_vae.py", package = "vmsae")
   car_dataset_module <- system.file("py", "car_dataset.py", package = "vmsae")
-  reticulate::use_virtualenv(envname, required = TRUE)
-  reticulate::py_config()
-  reticulate::source_python(vgmcar_module)
-  reticulate::source_python(vae_module)
-  reticulate::source_python(train_vae_module)
-  reticulate::source_python(car_dataset_module)
+  use_virtualenv(envname, required = TRUE)
+  py_config()
+  source_python(vgmcar_module)
+  source_python(vae_module)
+  source_python(train_vae_module)
+  source_python(car_dataset_module)
 }
 
 #' Download and Extract a Pretrained VAE Model
