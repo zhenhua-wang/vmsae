@@ -99,6 +99,7 @@ setClass("VGMSFH",
 #' }
 #'
 #' @importFrom reticulate py
+#' @importFrom methods new
 #'
 #' @export
 vgmsfh_numpyro <- function(y, y_sigma, X, W, GEOID,

@@ -69,6 +69,7 @@ setClass("Decoder",
 #' }
 #'
 #' @importFrom reticulate py
+#' @importFrom utils write.table
 #'
 #' @export
 train_vae <- function(W, GEOID, model_name, save_dir = ".",
@@ -105,6 +106,8 @@ train_vae <- function(W, GEOID, model_name, save_dir = ".",
 #' }
 #'
 #' @importFrom reticulate py
+#' @importFrom methods new
+#' @importFrom utils read.table
 #'
 #' @export
 load_vae <- function(model_name, save_dir = NULL) {

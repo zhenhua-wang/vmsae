@@ -79,6 +79,9 @@ load_environment <- function(envname = "vmsae") {
 #' download_pretrained_vae("vae_spatial", ".")
 #' }
 #'
+#' @importFrom utils download.file
+#' @importFrom utils unzip
+#'
 #' @export
 download_pretrained_vae <- function(model_name, save_dir) {
   url <- "https://zenodo.org/records/14993110/files/%s?download=1"

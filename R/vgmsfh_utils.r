@@ -47,6 +47,8 @@ setMethod("plot", "VGMSFH",
 #' @importFrom ggplot2 scale_fill_viridis_c
 #' @importFrom tidyr pivot_longer
 #' @importFrom gridExtra grid.arrange
+#' @importFrom methods slot
+#' @importFrom stats sd
 plot_estimate <- function(object, shp, var_idx) {
   var <- ith_data(slot(object, "yhat_samples"), var_idx)
   shp["mean"] <- apply(var, 2, mean)
@@ -69,6 +71,8 @@ plot_estimate <- function(object, shp, var_idx) {
 #' @importFrom ggplot2 scale_fill_viridis_c
 #' @importFrom dplyr %>%
 #' @importFrom tidyr pivot_longer
+#' @importFrom methods slot
+#' @importFrom stats quantile
 plot_compare <- function(object, shp, var_idx) {
   var <- ith_data(slot(object, "yhat_samples"), var_idx)
   shp["direct estimate"] <- ith_data(slot(object, "direct_estimate"), var_idx)
@@ -89,6 +93,7 @@ plot_compare <- function(object, shp, var_idx) {
 }
 
 #' @importFrom sf st_read
+#' @importFrom utils download.file
 load_pretrained_shapefile <- function(model_name) {
   base_url <-  "https://raw.githubusercontent.com/zhenhua-wang/vmsae_resources/refs/heads/main/shp_processed/"
   ## download shapefiles
@@ -133,6 +138,8 @@ load_pretrained_shapefile <- function(model_name) {
 #' summary(result)  # Summary of beta_samples for variable 1
 #' summary(result, var_idx = 2, field = "yhat_samples")
 #' }
+#'
+#' @importFrom methods slot
 #'
 #' @export
 setMethod("summary", "VGMSFH", function(object, var_idx = 1, field = "beta_samples") {
@@ -198,6 +205,9 @@ setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
 #' confint(result)  # Get credible intervals for predicted values
 #' confint(result, field = "beta_samples")  # For fixed effects
 #' }
+#'
+#' @importFrom methods slot
+#' @importFrom stats quantile
 #'
 #' @export
 setMethod("confint", "VGMSFH", function(object, var_idx = 1, field = "yhat_samples") {
