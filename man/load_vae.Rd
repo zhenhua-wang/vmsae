@@ -2,18 +2,29 @@
 % Please edit documentation in R/vae.r
 \name{load_vae}
 \alias{load_vae}
-\title{Load pretrained VAE decoder.}
+\title{Load Pretrained VAE Decoder}
 \usage{
 load_vae(model_name, save_dir = NULL)
 }
 \arguments{
-\item{model_name, }{String, trained VAE model name in lower case.}
+\item{model_name}{Character. The name of the trained VAE model (without \code{.zip} extensions).}
 
-\item{save_dir, }{String, directory to save the trained VAE model. Default to the current directory.}
+\item{save_dir}{Character. The directory where the trained VAE model is saved. Defaults to the current directory if \code{NULL}.}
 }
 \value{
-An object of the Decoder class.
+An object of class \code{Decoder}, containing the decoder weights and region identifiers.
 }
 \description{
-Load pretrained VAE decoder.
+Load a pretrained Variational Autoencoder (VAE) decoder from disk. This function reads the saved PyTorch model weights and corresponding GEOID list, and constructs a \code{Decoder} S4 object with the loaded parameters.
+}
+\details{
+This function assumes the model was trained and saved using \code{train_vae()}, and that the decoder weights are stored in a file compatible with \code{torch::load()} (via reticulate). It extracts the decoder input/output weights and biases, along with region GEOIDs, and returns them as an S4 object of class \code{Decoder}.
+}
+\examples{
+\dontrun{
+install_environment()
+load_environment()
+decoder <- load_vae(model_name = "test", save_dir = ".")
+}
+
 }

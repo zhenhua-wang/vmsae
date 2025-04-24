@@ -2,13 +2,21 @@
 % Please edit documentation in R/environment.r
 \name{install_environment}
 \alias{install_environment}
-\title{create the python environment.}
+\title{Install python environment.}
 \usage{
 install_environment(envname = "vmsae")
 }
 \arguments{
-\item{envname}{String, string path to python virtual environment.}
+\item{envname}{Character. The name of the Python environment to create or update.
+Default is \code{"vmsae"}.}
 }
 \description{
-This function loads the vgmsfh numpyro module
+This function creates the vmsae python environment and installs required packages.
+}
+\examples{
+\dontrun{
+install_environment()          # Install into default "vmsae" environment
+install_environment("custom")  # Install into a custom-named environment
+}
+
 }

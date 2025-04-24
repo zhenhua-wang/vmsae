@@ -1,8 +1,16 @@
-#' create the python environment.
+#' Install python environment.
 #'
-#' This function loads the vgmsfh numpyro module
+#' This function creates the vmsae python environment and installs required packages.
 #'
-#' @param envname String, string path to python virtual environment.
+#' @param envname Character. The name of the Python environment to create or update.
+#'        Default is `"vmsae"`.
+#'
+#' @examples
+#' \dontrun{
+#' install_environment()          # Install into default "vmsae" environment
+#' install_environment("custom")  # Install into a custom-named environment
+#' }
+#'
 #' @export
 install_environment <- function(envname = "vmsae") {
   reticulate::install_python()
@@ -10,11 +18,32 @@ install_environment <- function(envname = "vmsae") {
   reticulate::py_install("numpyro", envname = envname)
 }
 
-#' Load the vgmsfh numpyro module.
+#' Load Python Environment and Source Model Modules
 #'
-#' This function loads the vgmsfh numpyro module
+#' This function activates a specified Python virtual environment and sources Python modules
+#' used by the \pkg{vmsae} package, including models and python scripts.
 #'
-#' @param envname String, string path to python virtual environment.
+#' @param envname Character. The name of the Python environment to create or update.
+#'        Default is `"vmsae"`.
+#'
+#' @details
+#' The function loads four Python scripts located in the package's `py/` directory:
+#' \itemize{
+#'   \item \code{vgmcar.py}
+#'   \item \code{vae.py}
+#'   \item \code{train_vae.py}
+#'   \item \code{car_dataset.py}
+#' }
+#'
+#' The environment must be created beforehand (e.g., using `install_environment()`),
+#' and must include all Python dependencies required by these modules.
+#'
+#' @examples
+#' \dontrun{
+#' load_environment()          # Load default "vmsae" environment
+#' load_environment("custom") # Load custom virtual environment
+#' }
+#'
 #' @export
 load_environment <- function(envname = "vmsae") {
   vgmcar_module <- system.file("py", "vgmcar.py", package = "vmsae")
@@ -29,11 +58,20 @@ load_environment <- function(envname = "vmsae") {
   reticulate::source_python(car_dataset_module)
 }
 
-#' Download pretrained VAE model.
+#' Download and Extract a Pretrained VAE Model
 #'
-#' This function downloads pretrained VAE model and the corresponding GEOID.
+#' This function downloads a pretrained VAE model archive from Zenodo, extracts its contents
+#' into a specified directory, and removes the downloaded ZIP file after extraction.
 #'
-#' @param model_name String, vae model name. e.g. "mo_county".
+#' @param model_name Character. The name of the model file (without extension) to download.
+#'        This should correspond to a `*model_name*.zip` file hosted on Zenodo (e.g., `"ca_county"`).
+#' @param save_dir Character. The local directory where the model should be saved and extracted.
+#'
+#' @examples
+#' \dontrun{
+#' download_pretrained_vae("vae_spatial", tempdir())
+#' }
+#'
 #' @export
 download_pretrained_vae <- function(model_name, save_dir) {
   url <- "https://zenodo.org/records/14993110/files/%s?download=1"

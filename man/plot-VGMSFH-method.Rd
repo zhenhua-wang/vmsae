@@ -2,19 +2,39 @@
 % Please edit documentation in R/vgmsfh_utils.r
 \name{plot,VGMSFH-method}
 \alias{plot,VGMSFH-method}
-\title{Plot VGMSFH result.}
+\title{Plot VGMSFH Result}
 \usage{
 \S4method{plot}{VGMSFH}(x, shp = NULL, var_idx = 1, type = "compare")
 }
 \arguments{
-\item{shp}{The shapefile that contains the geometry. If null, this is downloaded from the pretrain model.}
+\item{x}{An object of class \code{VGMSFH}, containing posterior samples and direct estimates from the model.}
 
-\item{var_idx}{Index of the variable of interest.}
+\item{shp}{An \code{sf} object representing the spatial shapefile. If \code{NULL}, the function will automatically download a shapefile associated with the pretrained model.}
 
-\item{type}{Type of plots. "compare" is the plot comparing direct estimate and model estimate. "estimate" is the plot that shows the mean and standard deviation of the model estimate.}
+\item{var_idx}{Integer. The index of the variable of interest (for multivariate models).}
 
-\item{object}{An object containing the VGMSFH results.}
+\item{type}{Character. The type of plot to generate. Options are:
+\itemize{
+\item \code{"compare"} – compare direct estimates and model-based estimates.
+\item \code{"estimate"} – show the posterior mean and standard deviation of the model estimate.
+}}
+}
+\value{
+A \code{ggplot} object. The plot is rendered to the active device.
 }
 \description{
-This function plot the spatial map of VGMSFH result.
+This method plots spatial summaries of results from a \code{VGMSFH} object, including model estimates and comparisons with direct estimates.
+}
+\details{
+The function provides spatial visualization of model results. It supports both univariate and multivariate response settings. When \code{type = "compare"}, it generates side-by-side choropleth maps for the direct and model-based estimates. When \code{type = "estimate"}, it plots the posterior mean and standard deviation of the VGMSFH model output.
+
+If no shapefile is provided, a default geometry is loaded from the pretrained repository.
+}
+\examples{
+\dontrun{
+result <- vgmsfh_numpyro(...)
+plot(result, type = "compare")
+plot(result, type = "estimate", var_idx = 2)
+}
+
 }

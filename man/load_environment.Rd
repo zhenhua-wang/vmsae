@@ -2,13 +2,34 @@
 % Please edit documentation in R/environment.r
 \name{load_environment}
 \alias{load_environment}
-\title{Load the vgmsfh numpyro module.}
+\title{Load Python Environment and Source Model Modules}
 \usage{
 load_environment(envname = "vmsae")
 }
 \arguments{
-\item{envname}{String, string path to python virtual environment.}
+\item{envname}{Character. The name of the Python environment to create or update.
+Default is \code{"vmsae"}.}
 }
 \description{
-This function loads the vgmsfh numpyro module
+This function activates a specified Python virtual environment and sources Python modules
+used by the \pkg{vmsae} package, including models and python scripts.
+}
+\details{
+The function loads four Python scripts located in the package's \verb{py/} directory:
+\itemize{
+\item \code{vgmcar.py}
+\item \code{vae.py}
+\item \code{train_vae.py}
+\item \code{car_dataset.py}
+}
+
+The environment must be created beforehand (e.g., using \code{install_environment()}),
+and must include all Python dependencies required by these modules.
+}
+\examples{
+\dontrun{
+load_environment()          # Load default "vmsae" environment
+load_environment("custom") # Load custom virtual environment
+}
+
 }

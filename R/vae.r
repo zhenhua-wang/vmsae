@@ -1,10 +1,15 @@
-#' Class representing a VAE decoder.
+#' Decoder S4 Class
 #'
-#' @slot GEOID character vector, The FIPS codes or other equivalent GEOIDs.
-#' @slot W_in array, The input weights.
-#' @slot B_in array, The input bias.
-#' @slot W_out array, The output weights.
-#' @slot B_in array, The output bias.
+#' An S4 class to represent a neural network decoder, used for emulating spatial priors.
+#' The class includes parameters for input and output weight matrices and biases, as well as region identifiers.
+#'
+#' @slot GEOID A character vector of region or area identifiers.
+#' @slot W_in An array representing the input weight matrix of the decoder.
+#' @slot B_in An array representing the input bias vector of the decoder.
+#' @slot W_out An array representing the output weight matrix of the decoder.
+#' @slot B_out An array representing the output bias vector of the decoder.
+#'
+#' @export
 setClass("Decoder",
   slots = c(
     GEOID = "character",
@@ -15,23 +20,34 @@ setClass("Decoder",
   )
 )
 
-#' Train VAE for CAR prior.
+#' Train VAE for CAR Prior
 #'
-#' Train a Variational Autoencoder to learn the spatial structure of the Conditional Autoregressive prior and save the parameters in each layer, which can later be used as the generator in the Hamiltonian Monte Carlo step.
+#' Trains a Variational Autoencoder (VAE) to learn the spatial structure implied by the
+#' Conditional Autoregressive (CAR) prior. The trained VAE parameters are saved and can
+#' later be used as a generator within Hamiltonian Monte Carlo (HMC) sampling.
 #'
-#' @param W Matrix, proximity matrix.
-#' @param model_name, String, trained VAE model name in lower case.
-#' @param save_dir, String, directory to save the trained VAE model. Default to the current directory.
-#' @param n_samples, Int, number of training samples drawn from the prior. Default to 10,000.
-#' @param batch_size, Int, batch size of VAE. Default to 256.
-#' @param epoch, Int epoch of VAE. Default to 10,000.
-#' @param lr_init, Float, initial learning rate. Default to 0.001.
-#' @param lr_min, Float, reduced learning rate at the last epoch. Default to 1e-7.
-#' @export
+#' @param W Matrix. A proximity or adjacency matrix representing spatial relationships.
+#' @param GEOID Character vector. Identifiers for spatial units (e.g., region or area codes).
+#' @param model_name Character. The name of the trained VAE model.
+#' @param save_dir Character. Directory to save the trained VAE model and associated metadata. Defaults to the current working directory.
+#' @param n_samples Integer. Number of samples to draw from the prior for training. Default is \code{10000}.
+#' @param batch_size Integer. Batch size for VAE training. Default is \code{256}.
+#' @param epoch Integer. Number of training epochs. Default is \code{10000}.
+#' @param lr_init Numeric. Initial learning rate. Default is \code{0.001}.
+#' @param lr_min Numeric. Minimum learning rate at the final epoch. Default is \code{1e-7}.
 #'
-#' @return A list that contains the total loss, reconstructed error and KL divergence of VAE
+#' @return A named list containing:
+#' \item{loss}{Total training loss}
+#' \item{RCL}{Reconstruction error}
+#' \item{KLD}{Kullback–Leibler divergence}
+#'
+#' @details
+#' The function requires a configured Python environment via the \pkg{reticulate} interface,
+#' with VAE training implemented in Python. It uses \code{py$train_vae()} defined in the
+#' sourced Python modules (see \code{\link{load_environment}}).
 #'
 #' @examples
+#' \dontrun{
 #' library(sf)
 #' library(tidyverse)
 #' library(spdep)
@@ -39,8 +55,7 @@ setClass("Decoder",
 #' install_environment()
 #' load_environment()
 #'
-#' acs_data <-
-#'   read_sf(system.file("data", "mo_county.shp", package = "vmsae")) %>%
+#' acs_data <- read_sf(system.file("data", "mo_county.shp", package = "vmsae")) %>%
 #'   na.omit()
 #' W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
 #'
@@ -51,6 +66,9 @@ setClass("Decoder",
 #'   n_samples = 10000,
 #'   batch_size = 256,
 #'   epoch = 10000)
+#' }
+#'
+#' @export
 train_vae <- function(W, GEOID, model_name, save_dir = ".",
                       n_samples = 10000, batch_size = 256, epoch = 10000,
                       lr_init = 0.001, lr_min = 1e-7) {
@@ -65,14 +83,26 @@ train_vae <- function(W, GEOID, model_name, save_dir = ".",
   return(list(loss = loss[[1]], RCL = loss[[2]], KLD = loss[[3]]))
 }
 
-
-#' Load pretrained VAE decoder.
+#' Load Pretrained VAE Decoder
 #'
-#' @param model_name, String, trained VAE model name in lower case.
-#' @param save_dir, String, directory to save the trained VAE model. Default to the current directory.
+#' Load a pretrained Variational Autoencoder (VAE) decoder from disk. This function reads the saved PyTorch model weights and corresponding GEOID list, and constructs a `Decoder` S4 object with the loaded parameters.
+#'
+#' @param model_name Character. The name of the trained VAE model (without `.zip` extensions).
+#' @param save_dir Character. The directory where the trained VAE model is saved. Defaults to the current directory if `NULL`.
+#'
+#' @return An object of class \code{Decoder}, containing the decoder weights and region identifiers.
+#'
+#' @details
+#' This function assumes the model was trained and saved using `train_vae()`, and that the decoder weights are stored in a file compatible with `torch::load()` (via reticulate). It extracts the decoder input/output weights and biases, along with region GEOIDs, and returns them as an S4 object of class `Decoder`.
+#'
+#' @examples
+#' \dontrun{
+#' install_environment()
+#' load_environment()
+#' decoder <- load_vae(model_name = "test", save_dir = ".")
+#' }
+#'
 #' @export
-#'
-#' @return An object of the Decoder class.
 load_vae <- function(model_name, save_dir = NULL) {
   save_path <- get_save_path(model_name, save_dir)
   vae_path <- save_path$vae_path

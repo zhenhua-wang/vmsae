@@ -2,13 +2,36 @@
 % Please edit documentation in R/vgmsfh_utils.r
 \name{summary,VGMSFH-method}
 \alias{summary,VGMSFH-method}
-\title{Summarize VGMSFH result.}
+\title{Summarize VGMSFH Result}
 \usage{
 \S4method{summary}{VGMSFH}(object, var_idx = 1, field = "beta_samples")
 }
+\arguments{
+\item{object}{An object of class \code{VGMSFH}, containing posterior samples from the model.}
+
+\item{var_idx}{Integer. The index of the variable of interest (for multivariate models). Default is \code{1}.}
+
+\item{field}{Character. The name of the slot in the \code{VGMSFH} object to summarize (e.g., \code{"beta_samples"}, \code{"spatial_samples"}, \code{"yhat_samples"}). Default is \code{"beta_samples"}.}
+}
 \value{
-data frame, summary of VGMSFH result.
+A data frame with columns:
+\itemize{
+\item \code{mean}: Posterior mean,
+\item \code{lower}: Lower bound of the credible interval,
+\item \code{upper}: Upper bound of the credible interval.
+}
 }
 \description{
-This function display the summary of VGMSFH result.
+This method provides a summary of posterior samples from a \code{VGMSFH} object, including posterior means and credible intervals for a specified parameter field.
+}
+\details{
+This function extracts the posterior samples for the specified variable index, and combines it with \code{confint()} to compute credible intervals. The result is a compact summary table of central tendency and uncertainty.
+}
+\examples{
+\dontrun{
+result <- vgmsfh_numpyro(...)
+summary(result)  # Summary of beta_samples for variable 1
+summary(result, var_idx = 2, field = "yhat_samples")
+}
+
 }

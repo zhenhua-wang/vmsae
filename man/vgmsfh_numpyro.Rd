@@ -2,7 +2,7 @@
 % Please edit documentation in R/vgmsfh.r
 \name{vgmsfh_numpyro}
 \alias{vgmsfh_numpyro}
-\title{Run vgmsfh using numpyro.}
+\title{Run VGMSFH Using NumPyro}
 \usage{
 vgmsfh_numpyro(
   y,
@@ -17,27 +17,51 @@ vgmsfh_numpyro(
 )
 }
 \arguments{
-\item{y}{Matrix, responses.}
+\item{y}{Matrix. Response variables (direct estimates).}
 
-\item{y_sigma}{Matrix, reported standard deviations.}
+\item{y_sigma}{Matrix. Reported standard deviations of the responses.}
 
-\item{X}{Matrix, covariance matrix.}
+\item{X}{Matrix. Covariate matrix.}
 
-\item{W}{Matrix, proximity matrix}
+\item{W}{Matrix. Proximity or adjacency matrix defining spatial structure.}
 
-\item{GEOID}{Vector, FIPS codes or other equivalent GEOIDs.}
+\item{GEOID}{Character vector. FIPS codes or other region identifiers used to match with the pretrained VAE model.}
 
-\item{model_name}{String, vae model name.}
+\item{model_name}{Character. The name of the pretrained VAE model.}
 
-\item{save_dir}{String, vae model saving directory. Default to use pretrained models.}
+\item{save_dir}{Character. The directory where the VAE model is stored. If \code{NULL}, a default pretrained model directory is used.}
 
-\item{num_warmup}{Int, Number of burning-in. Default to 1000.}
+\item{num_warmup}{Integer. Number of warmup (burn-in) iterations. Default is 1000.}
 
-\item{num_samples}{Int, Number of posterior samples. Default to 1000.}
+\item{num_samples}{Integer. Number of posterior samples to draw. Default is 1000.}
 }
 \value{
-VGMSFH s4 object, which contains the direct estimate and the posterior samples of yhat (population process), mu (intercept of population process), beta (coefficient of covariates), delta (fine scale variations of population process), car (spatial random effects of population process). In addition, all other posteriors (bridging variables, variations of random effects) including all meantioned before are provided in "all_samples".
+An object of class \code{VGMSFH}, which contains:
+\itemize{
+\item \code{direct_estimate}: the observed response data,
+\item \code{yhat_samples}: posterior samples of the latent population process,
+\item \code{spatial_samples}: posterior samples of spatial random effects (CAR),
+\item \code{beta_samples}: posterior samples of fixed effect coefficients,
+\item \code{all_samples}: a list containing all sampled parameters, including \code{mu}, \code{delta}, and other intermediate quantities.
+}
 }
 \description{
-Run vgmsfh using numpyro as the backend.
+This function runs the Variational Generalized Multivariate Spatil Fay-Herriot model (VGMSFH) using NumPyro as the inference backend. It loads pretrained VAE decoder weights, prepares the data, and performs posterior sampling.
+}
+\details{
+This function uses a pretrained VAE decoder to parameterize the CAR prior and enables scalable inference through NumPyro. It is suitable for both univariate and multivariate response modeling in spatial domains.
+}
+\examples{
+\dontrun{
+install_environment()
+load_environment()
+data(mtcars)
+y <- matrix(mtcars$mpg, ncol = 1)
+y_sigma <- matrix(rep(1, length(y)), ncol = 1)
+X <- as.matrix(mtcars[, c("disp", "hp")])
+W <- diag(nrow(y))  # placeholder W
+GEOID <- as.character(1:nrow(y))
+result <- vgmsfh_numpyro(y, y_sigma, X, W, GEOID, model_name = "test")
+}
+
 }

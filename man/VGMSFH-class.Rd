@@ -3,21 +3,23 @@
 \docType{class}
 \name{VGMSFH-class}
 \alias{VGMSFH-class}
-\title{Class contains the results of VGMSFH.}
+\title{VGMSFH S4 Class}
 \description{
-Class contains the results of VGMSFH.
+An S4 class to store results from the Variational Gaussian Markov Small Area Estimation with Fay-Herriot model (VGMSFH). This class holds the posterior samples for various model components as well as the original direct estimates.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{direct_estimate}}{array, Direct estimate of the population parameters.}
+\item{\code{model_name}}{Character. The name of the trained VAE model.}
 
-\item{\code{yhat_samples}}{array, The posterior samples of estimated population parameters.}
+\item{\code{direct_estimate}}{Array. Direct estimates of parameters.}
 
-\item{\code{spatial_samples}}{array, The posterior samples of estimated spatial random effects.}
+\item{\code{yhat_samples}}{Array. Posterior samples of the estimated parameters.}
 
-\item{\code{beta_samples}}{array, The posterior samples of coefficients of fixed effects.}
+\item{\code{spatial_samples}}{Array. Posterior samples of the estimated spatial random effects.}
 
-\item{\code{all_samples}}{array, The posterior samples of all parameters in VGMSFH.}
+\item{\code{beta_samples}}{Array. Posterior samples of the fixed effect coefficients.}
+
+\item{\code{all_samples}}{List. Posterior samples of all parameters in the VGMSFH model.}
 }}
 

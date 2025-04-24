@@ -2,7 +2,7 @@
 % Please edit documentation in R/vae.r
 \name{train_vae}
 \alias{train_vae}
-\title{Train VAE for CAR prior.}
+\title{Train VAE for CAR Prior}
 \usage{
 train_vae(
   W,
@@ -17,29 +17,42 @@ train_vae(
 )
 }
 \arguments{
-\item{W}{Matrix, proximity matrix.}
+\item{W}{Matrix. A proximity or adjacency matrix representing spatial relationships.}
 
-\item{model_name, }{String, trained VAE model name in lower case.}
+\item{GEOID}{Character vector. Identifiers for spatial units (e.g., region or area codes).}
 
-\item{save_dir, }{String, directory to save the trained VAE model. Default to the current directory.}
+\item{model_name}{Character. The name of the trained VAE model.}
 
-\item{n_samples, }{Int, number of training samples drawn from the prior. Default to 10,000.}
+\item{save_dir}{Character. Directory to save the trained VAE model and associated metadata. Defaults to the current working directory.}
 
-\item{batch_size, }{Int, batch size of VAE. Default to 256.}
+\item{n_samples}{Integer. Number of samples to draw from the prior for training. Default is \code{10000}.}
 
-\item{epoch, }{Int epoch of VAE. Default to 10,000.}
+\item{batch_size}{Integer. Batch size for VAE training. Default is \code{256}.}
 
-\item{lr_init, }{Float, initial learning rate. Default to 0.001.}
+\item{epoch}{Integer. Number of training epochs. Default is \code{10000}.}
 
-\item{lr_min, }{Float, reduced learning rate at the last epoch. Default to 1e-7.}
+\item{lr_init}{Numeric. Initial learning rate. Default is \code{0.001}.}
+
+\item{lr_min}{Numeric. Minimum learning rate at the final epoch. Default is \code{1e-7}.}
 }
 \value{
-A list that contains the total loss, reconstructed error and KL divergence of VAE
+A named list containing:
+\item{loss}{Total training loss}
+\item{RCL}{Reconstruction error}
+\item{KLD}{Kullback–Leibler divergence}
 }
 \description{
-Train a Variational Autoencoder to learn the spatial structure of the Conditional Autoregressive prior and save the parameters in each layer, which can later be used as the generator in the Hamiltonian Monte Carlo step.
+Trains a Variational Autoencoder (VAE) to learn the spatial structure implied by the
+Conditional Autoregressive (CAR) prior. The trained VAE parameters are saved and can
+later be used as a generator within Hamiltonian Monte Carlo (HMC) sampling.
+}
+\details{
+The function requires a configured Python environment via the \pkg{reticulate} interface,
+with VAE training implemented in Python. It uses \code{py$train_vae()} defined in the
+sourced Python modules (see \code{\link{load_environment}}).
 }
 \examples{
+\dontrun{
 library(sf)
 library(tidyverse)
 library(spdep)
@@ -47,8 +60,7 @@ library(vmsae)
 install_environment()
 load_environment()
 
-acs_data <-
-  read_sf(system.file("data", "mo_county.shp", package = "vmsae")) \%>\%
+acs_data <- read_sf(system.file("data", "mo_county.shp", package = "vmsae")) \%>\%
   na.omit()
 W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
 
@@ -59,4 +71,6 @@ loss <- train_vae(W = W,
   n_samples = 10000,
   batch_size = 256,
   epoch = 10000)
+}
+
 }

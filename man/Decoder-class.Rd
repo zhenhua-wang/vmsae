@@ -3,21 +3,22 @@
 \docType{class}
 \name{Decoder-class}
 \alias{Decoder-class}
-\title{Class representing a VAE decoder.}
+\title{Decoder S4 Class}
 \description{
-Class representing a VAE decoder.
+An S4 class to represent a neural network decoder, used for emulating spatial priors.
+The class includes parameters for input and output weight matrices and biases, as well as region identifiers.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{GEOID}}{character vector, The FIPS codes or other equivalent GEOIDs.}
+\item{\code{GEOID}}{A character vector of region or area identifiers.}
 
-\item{\code{W_in}}{array, The input weights.}
+\item{\code{W_in}}{An array representing the input weight matrix of the decoder.}
 
-\item{\code{B_in}}{array, The input bias.}
+\item{\code{B_in}}{An array representing the input bias vector of the decoder.}
 
-\item{\code{W_out}}{array, The output weights.}
+\item{\code{W_out}}{An array representing the output weight matrix of the decoder.}
 
-\item{\code{B_in}}{array, The output bias.}
+\item{\code{B_out}}{An array representing the output bias vector of the decoder.}
 }}
 

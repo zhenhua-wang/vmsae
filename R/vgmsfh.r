@@ -1,10 +1,15 @@
-#' Class contains the results of VGMSFH.
+#' VGMSFH S4 Class
 #'
-#' @slot direct_estimate array, Direct estimate of the population parameters.
-#' @slot yhat_samples array, The posterior samples of estimated population parameters.
-#' @slot spatial_samples array, The posterior samples of estimated spatial random effects.
-#' @slot beta_samples array, The posterior samples of coefficients of fixed effects.
-#' @slot all_samples array, The posterior samples of all parameters in VGMSFH.
+#' An S4 class to store results from the Variational Gaussian Markov Small Area Estimation with Fay-Herriot model (VGMSFH). This class holds the posterior samples for various model components as well as the original direct estimates.
+#'
+#' @slot model_name Character. The name of the trained VAE model.
+#' @slot direct_estimate Array. Direct estimates of parameters.
+#' @slot yhat_samples Array. Posterior samples of the estimated parameters.
+#' @slot spatial_samples Array. Posterior samples of the estimated spatial random effects.
+#' @slot beta_samples Array. Posterior samples of the fixed effect coefficients.
+#' @slot all_samples List. Posterior samples of all parameters in the VGMSFH model.
+#'
+#' @export
 setClass("VGMSFH",
   slots = c(
     model_name = "character",
@@ -16,20 +21,45 @@ setClass("VGMSFH",
   )
 )
 
-#' Run vgmsfh using numpyro.
+#' Run VGMSFH Using NumPyro
 #'
-#' Run vgmsfh using numpyro as the backend.
+#' This function runs the Variational Generalized Multivariate Spatil Fay-Herriot model (VGMSFH) using NumPyro as the inference backend. It loads pretrained VAE decoder weights, prepares the data, and performs posterior sampling.
 #'
-#' @param y Matrix, responses.
-#' @param y_sigma Matrix, reported standard deviations.
-#' @param X Matrix, covariance matrix.
-#' @param W Matrix, proximity matrix
-#' @param GEOID Vector, FIPS codes or other equivalent GEOIDs.
-#' @param model_name String, vae model name.
-#' @param save_dir String, vae model saving directory. Default to use pretrained models.
-#' @param num_samples Int, Number of posterior samples. Default to 1000.
-#' @param num_warmup Int, Number of burning-in. Default to 1000.
-#' @return VGMSFH s4 object, which contains the direct estimate and the posterior samples of yhat (population process), mu (intercept of population process), beta (coefficient of covariates), delta (fine scale variations of population process), car (spatial random effects of population process). In addition, all other posteriors (bridging variables, variations of random effects) including all meantioned before are provided in "all_samples".
+#' @param y Matrix. Response variables (direct estimates).
+#' @param y_sigma Matrix. Reported standard deviations of the responses.
+#' @param X Matrix. Covariate matrix.
+#' @param W Matrix. Proximity or adjacency matrix defining spatial structure.
+#' @param GEOID Character vector. FIPS codes or other region identifiers used to match with the pretrained VAE model.
+#' @param model_name Character. The name of the pretrained VAE model.
+#' @param save_dir Character. The directory where the VAE model is stored. If \code{NULL}, a default pretrained model directory is used.
+#' @param num_samples Integer. Number of posterior samples to draw. Default is 1000.
+#' @param num_warmup Integer. Number of warmup (burn-in) iterations. Default is 1000.
+#'
+#' @return An object of class \code{VGMSFH}, which contains:
+#' \itemize{
+#'   \item \code{direct_estimate}: the observed response data,
+#'   \item \code{yhat_samples}: posterior samples of the latent population process,
+#'   \item \code{spatial_samples}: posterior samples of spatial random effects (CAR),
+#'   \item \code{beta_samples}: posterior samples of fixed effect coefficients,
+#'   \item \code{all_samples}: a list containing all sampled parameters, including \code{mu}, \code{delta}, and other intermediate quantities.
+#' }
+#'
+#' @details
+#' This function uses a pretrained VAE decoder to parameterize the CAR prior and enables scalable inference through NumPyro. It is suitable for both univariate and multivariate response modeling in spatial domains.
+#'
+#' @examples
+#' \dontrun{
+#' install_environment()
+#' load_environment()
+#' data(mtcars)
+#' y <- matrix(mtcars$mpg, ncol = 1)
+#' y_sigma <- matrix(rep(1, length(y)), ncol = 1)
+#' X <- as.matrix(mtcars[, c("disp", "hp")])
+#' W <- diag(nrow(y))  # placeholder W
+#' GEOID <- as.character(1:nrow(y))
+#' result <- vgmsfh_numpyro(y, y_sigma, X, W, GEOID, model_name = "test")
+#' }
+#'
 #' @export
 vgmsfh_numpyro <- function(y, y_sigma, X, W, GEOID,
                            model_name, save_dir = NULL,

@@ -2,13 +2,23 @@
 % Please edit documentation in R/environment.r
 \name{download_pretrained_vae}
 \alias{download_pretrained_vae}
-\title{Download pretrained VAE model.}
+\title{Download and Extract a Pretrained VAE Model}
 \usage{
 download_pretrained_vae(model_name, save_dir)
 }
 \arguments{
-\item{model_name}{String, vae model name. e.g. "mo_county".}
+\item{model_name}{Character. The name of the model file (without extension) to download.
+This should correspond to a \verb{*model_name*.zip} file hosted on Zenodo (e.g., \code{"ca_county"}).}
+
+\item{save_dir}{Character. The local directory where the model should be saved and extracted.}
 }
 \description{
-This function downloads pretrained VAE model and the corresponding GEOID.
+This function downloads a pretrained VAE model archive from Zenodo, extracts its contents
+into a specified directory, and removes the downloaded ZIP file after extraction.
+}
+\examples{
+\dontrun{
+download_pretrained_vae("vae_spatial", tempdir())
+}
+
 }

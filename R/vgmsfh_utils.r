@@ -1,11 +1,30 @@
-#' Plot VGMSFH result.
+#' Plot VGMSFH Result
 #'
-#' This function plot the spatial map of VGMSFH result.
+#' This method plots spatial summaries of results from a \code{VGMSFH} object, including model estimates and comparisons with direct estimates.
 #'
-#' @param object An object containing the VGMSFH results.
-#' @param shp The shapefile that contains the geometry. If null, this is downloaded from the pretrain model.
-#' @param var_idx Index of the variable of interest.
-#' @param type Type of plots. "compare" is the plot comparing direct estimate and model estimate. "estimate" is the plot that shows the mean and standard deviation of the model estimate.
+#' @param x An object of class \code{VGMSFH}, containing posterior samples and direct estimates from the model.
+#' @param shp An \code{sf} object representing the spatial shapefile. If \code{NULL}, the function will automatically download a shapefile associated with the pretrained model.
+#' @param var_idx Integer. The index of the variable of interest (for multivariate models).
+#' @param type Character. The type of plot to generate. Options are:
+#' \itemize{
+#'   \item \code{"compare"} – compare direct estimates and model-based estimates.
+#'   \item \code{"estimate"} – show the posterior mean and standard deviation of the model estimate.
+#' }
+#'
+#' @details
+#' The function provides spatial visualization of model results. It supports both univariate and multivariate response settings. When \code{type = "compare"}, it generates side-by-side choropleth maps for the direct and model-based estimates. When \code{type = "estimate"}, it plots the posterior mean and standard deviation of the VGMSFH model output.
+#'
+#' If no shapefile is provided, a default geometry is loaded from the pretrained repository.
+#'
+#' @return A \code{ggplot} object. The plot is rendered to the active device.
+#'
+#' @examples
+#' \dontrun{
+#' result <- vgmsfh_numpyro(...)
+#' plot(result, type = "compare")
+#' plot(result, type = "estimate", var_idx = 2)
+#' }
+#'
 #' @export
 setMethod("plot", "VGMSFH",
   function(x, shp = NULL, var_idx = 1, type = "compare") {
@@ -90,11 +109,31 @@ load_pretrained_shapefile <- function(model_name) {
   return(shapefile)
 }
 
-#' Summarize VGMSFH result.
+#' Summarize VGMSFH Result
 #'
-#' This function display the summary of VGMSFH result.
+#' This method provides a summary of posterior samples from a \code{VGMSFH} object, including posterior means and credible intervals for a specified parameter field.
 #'
-#' @return data frame, summary of VGMSFH result.
+#' @param object An object of class \code{VGMSFH}, containing posterior samples from the model.
+#' @param var_idx Integer. The index of the variable of interest (for multivariate models). Default is \code{1}.
+#' @param field Character. The name of the slot in the \code{VGMSFH} object to summarize (e.g., \code{"beta_samples"}, \code{"spatial_samples"}, \code{"yhat_samples"}). Default is \code{"beta_samples"}.
+#'
+#' @return A data frame with columns:
+#' \itemize{
+#'   \item \code{mean}: Posterior mean,
+#'   \item \code{lower}: Lower bound of the credible interval,
+#'   \item \code{upper}: Upper bound of the credible interval.
+#' }
+#'
+#' @details
+#' This function extracts the posterior samples for the specified variable index, and combines it with \code{confint()} to compute credible intervals. The result is a compact summary table of central tendency and uncertainty.
+#'
+#' @examples
+#' \dontrun{
+#' result <- vgmsfh_numpyro(...)
+#' summary(result)  # Summary of beta_samples for variable 1
+#' summary(result, var_idx = 2, field = "yhat_samples")
+#' }
+#'
 #' @export
 setMethod("summary", "VGMSFH", function(object, var_idx = 1, field = "beta_samples") {
   var_mean <- apply(ith_data(slot(object, field), var_idx), 2, mean)
@@ -104,6 +143,27 @@ setMethod("summary", "VGMSFH", function(object, var_idx = 1, field = "beta_sampl
   return(var_summary)
 })
 
+#' Extract Coefficients from a VGMSFH Object
+#'
+#' This method extracts posterior mean estimates of model coefficients from a \code{VGMSFH} object. It can return either fixed effect coefficients or spatial random effects.
+#'
+#' @param object An object of class \code{VGMSFH}.
+#' @param var_idx Integer. The index of the variable of interest (for multivariate models). Default is \code{1}.
+#' @param type Character. The type of coefficient to extract. Options are:
+#' \itemize{
+#'   \item \code{"fixed"} – extract the posterior mean of fixed effect coefficients (default).
+#'   \item \code{"spatial"} – extract the posterior mean of spatial random effects.
+#' }
+#'
+#' @return A numeric vector of posterior means for the selected coefficient type.
+#'
+#' @examples
+#' \dontrun{
+#' result <- vgmsfh_numpyro(...)
+#' coef(result)  # Get fixed effect coefficients
+#' coef(result, type = "spatial")  # Get spatial random effects
+#' }
+#'
 #' @export
 setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
   if (type == "fixed") {
@@ -115,6 +175,30 @@ setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
   return(var_mean)
 })
 
+#' Compute Credible Intervals for VGMSFH Parameters
+#'
+#' This method computes 95\% Bayesian credible intervals for the posterior samples of a selected parameter field in a \code{VGMSFH} object.
+#'
+#' @param object An object of class \code{VGMSFH}.
+#' @param var_idx Integer. The index of the variable of interest (for multivariate models). Default is \code{1}.
+#' @param field Character. The name of the slot to summarize (e.g., \code{"yhat_samples"}, \code{"beta_samples"}, \code{"spatial_samples"}). Default is \code{"yhat_samples"}.
+#'
+#' @return A data frame with two columns:
+#' \itemize{
+#'   \item \code{lower}: the 2.5\% quantile of the posterior distribution.
+#'   \item \code{upper}: the 97.5\% quantile of the posterior distribution.
+#' }
+#'
+#' @details
+#' The function extracts posterior samples for the specified variable and then computes quantiles to form 95\% credible intervals. This is useful for uncertainty quantification in model predictions or parameter estimates.
+#'
+#' @examples
+#' \dontrun{
+#' result <- vgmsfh_numpyro(...)
+#' confint(result)  # Get credible intervals for predicted values
+#' confint(result, field = "beta_samples")  # For fixed effects
+#' }
+#'
 #' @export
 setMethod("confint", "VGMSFH", function(object, var_idx = 1, field = "yhat_samples") {
   var_lower <- apply(
