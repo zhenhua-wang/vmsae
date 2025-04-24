@@ -47,6 +47,9 @@ setClass("VGMSFH",
 #' @details
 #' This function uses a pretrained VAE decoder to parameterize the CAR prior and enables scalable inference through NumPyro. It is suitable for both univariate and multivariate response modeling in spatial domains.
 #'
+#' @references
+#' Wang, Z., Parker, P. A., & Holan, S. H. (2025). Variational Autoencoded Multivariate Spatial Fay-Herriot Models. arXiv:2503.14710. \url{https://arxiv.org/abs/2503.14710}
+#'
 #' @examples
 #' \dontrun{
 #' install_environment()

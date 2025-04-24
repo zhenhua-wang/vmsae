@@ -65,3 +65,6 @@ result <- vgmsfh_numpyro(y, y_sigma, X, W, GEOID, model_name = "test")
 }
 
 }
+\references{
+Wang, Z., Parker, P. A., & Holan, S. H. (2025). Variational Autoencoded Multivariate Spatial Fay-Herriot Models. arXiv:2503.14710. \url{https://arxiv.org/abs/2503.14710}
+}
