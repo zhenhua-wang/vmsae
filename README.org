@@ -42,19 +42,19 @@ Plot the estimation result
 #+begin_src ess-r :session :results output :exports both
 plot(model, type = "compare")
 #+end_src
-[[file:inst/plot/compare.png]]
+[[file:plot/compare.png]]
 
 For multivariate models, we can select a response variable to plot with =var_idx=
 #+begin_src ess-r :session :results output :exports both
 plot(model, type = "compare", var_idx = 2)
 #+end_src
-[[file:inst/plot/compare2.png]]
+[[file:plot/compare2.png]]
 
 We can also plot the mean and standard deviation of the estimation
 #+begin_src ess-r :session :results output :exports both
 plot(model, type = "estimate", var_idx = 1)
 #+end_src
-[[file:inst/plot/estimate.png]]
+[[file:plot/estimate.png]]
 
 * Train VAE
 
