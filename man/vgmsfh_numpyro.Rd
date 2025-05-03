@@ -52,41 +52,19 @@ This function runs the Variational Generalized Multivariate Spatil Fay-Herriot m
 This function uses a pretrained VAE decoder to parameterize the CAR prior and enables scalable inference through NumPyro. It is suitable for both univariate and multivariate response modeling in spatial domains.
 }
 \examples{
-\dontrun{
+\donttest{
 library(sf)
-library(tidyverse)
-library(spdep)
 library(vmsae)
 install_environment()
 load_environment()
 
-acs_data <-
-  read_sf(system.file("example_data", "mo_county.shp", package = "vmsae")) \%>\%
-  mutate(
-    var = (moe / 1.645)^2,
-    estimate_log = log(estimate),
-    var_log = (1 / estimate)^2 * var,
-    var2 = (moe2 / 1.645)^2,
-    estimate2_log = log(estimate2),
-    var2_log = (1 / estimate2)^2 * var2) \%>\%
-  na.omit()
+acs_data <- read_sf(system.file("example", "mo_county.shp", package = "vmsae"))
+y <- readRDS(system.file("example", "y.Rds", package = "vmsae"))
+y_sigma <- readRDS(system.file("example", "y_sigma.Rds", package = "vmsae"))
+X <- readRDS(system.file("example", "X.Rds", package = "vmsae"))
+W <- readRDS(system.file("example", "W.Rds", package = "vmsae"))
 
-y <- acs_data \%>\%
-  select(estimate_log, estimate2_log) \%>\%
-  st_drop_geometry() \%>\%
-  as.matrix()
-y_sigma <- acs_data \%>\%
-  select(var_log, var2_log) \%>\%
-  st_drop_geometry() \%>\%
-  as.matrix() \%>\%
-  sqrt()
-X <- acs_data \%>\%
-  select(poverty, black, india, asian) \%>\%
-  st_drop_geometry() \%>\%
-  as.matrix()
-W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
-
-num_samples <- 10000
+num_samples <- 1000 # set to larger values in practice, e.g. 10000.
 model <- vgmsfh_numpyro(y, y_sigma, X, W,
   GEOID = acs_data$GEOID,
   model_name = "mo_county", save_dir = NULL,

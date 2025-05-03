@@ -27,10 +27,9 @@ This method computes 95\\% Bayesian credible intervals for the posterior samples
 The function extracts posterior samples for the specified variable and then computes quantiles to form 95\\% credible intervals. This is useful for uncertainty quantification in model predictions or parameter estimates.
 }
 \examples{
-\dontrun{
-result <- vgmsfh_numpyro(...)
-confint(result)  # Get credible intervals for predicted values
-confint(result, field = "beta_samples")  # For fixed effects
-}
+library(vmsae)
+example_model <- readRDS(system.file("example", "example_model.Rds", package = "vmsae"))
+confint(example_model)  # Get credible intervals for predicted values
+confint(example_model, field = "beta_samples")  # For fixed effects
 
 }

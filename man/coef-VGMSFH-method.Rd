@@ -24,10 +24,9 @@ A numeric vector of posterior means for the selected coefficient type.
 This method extracts posterior mean estimates of model coefficients from a \code{VGMSFH} object. It can return either fixed effect coefficients or spatial random effects.
 }
 \examples{
-\dontrun{
-result <- vgmsfh_numpyro(...)
-coef(result)  # Get fixed effect coefficients
-coef(result, type = "spatial")  # Get spatial random effects
-}
+library(vmsae)
+example_model <- readRDS(system.file("example", "example_model.Rds", package = "vmsae"))
+coef(example_model)  # Get fixed effect coefficients
+coef(example_model, type = "spatial")  # Get spatial random effects
 
 }

@@ -21,7 +21,8 @@ Load a pretrained Variational Autoencoder (VAE) decoder from disk. This function
 This function assumes the model was trained and saved using \code{train_vae()}, and that the decoder weights are stored in a file compatible with \code{torch::load()} (via reticulate). It extracts the decoder input/output weights and biases, along with region GEOIDs, and returns them as an S4 object of class \code{Decoder}.
 }
 \examples{
-\dontrun{
+\donttest{
+library(vmsae)
 install_environment()
 load_environment()
 decoder <- load_vae(model_name = "mo_county")

@@ -5,7 +5,7 @@ from car_dataset import CARDataset, generate_CAR_dataset
 
 def train_vae(W, save_path,
               n_samples, batch_size,
-              epoch, lr_init, lr_min):
+              epoch, lr_init, lr_min, verbose=True):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f"VAE is trained on {device}")
     lr_gamma = pow(lr_min * (1/lr_init), 1/epoch)
@@ -20,7 +20,7 @@ def train_vae(W, save_path,
     epoch = int(epoch)
     # training data
     dataset_CAR = generate_CAR_dataset(
-        n_samples, D.to(device), W.to(device), device).cpu()
+        n_samples, D.to(device), W.to(device), device, verbose).cpu()
     train_dataset = CARDataset(dataset_CAR)
     train_dl = DataLoader(train_dataset,
                           batch_size=batch_size,
@@ -36,6 +36,7 @@ def train_vae(W, save_path,
                                epoch=epoch,
                                beta=1/latent_dim,
                                clip_value=1,
-                               device=device)
+                               device=device,
+                               verbose=verbose)
     torch.save(model.state_dict(), save_path)
     return loss, RCL, KLD

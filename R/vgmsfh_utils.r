@@ -10,6 +10,7 @@
 #'   \item \code{"compare"} – compare direct estimates and model-based estimates.
 #'   \item \code{"estimate"} – show the posterior mean and standard deviation of the model estimate.
 #' }
+#' @param verbose Logical; if \code{TRUE} (default), prints error messages.
 #'
 #' @details
 #' The function provides spatial visualization of model results. It supports both univariate and multivariate response settings. When \code{type = "compare"}, it generates side-by-side choropleth maps for the direct and model-based estimates. When \code{type = "estimate"}, it plots the posterior mean and standard deviation of the VGMSFH model output.
@@ -19,15 +20,16 @@
 #' @return A \code{ggplot} object. The plot is rendered to the active device.
 #'
 #' @examples
-#' \dontrun{
-#' result <- vgmsfh_numpyro(...)
-#' plot(result, type = "compare")
-#' plot(result, type = "estimate", var_idx = 2)
-#' }
+#' library(vmsae)
+#' library(sf)
+#' example_model <- readRDS(system.file("example", "example_model.Rds", package = "vmsae"))
+#' example_shp <- read_sf(system.file("example", "mo_county.shp", package = "vmsae"))
+#' plot(example_model, shp = example_shp, type = "compare")
+#' plot(example_model, shp = example_shp, type = "estimate", var_idx = 2)
 #'
 #' @export
 setMethod("plot", "VGMSFH",
-  function(x, shp = NULL, var_idx = 1, type = "compare") {
+  function(x, shp = NULL, var_idx = 1, type = "compare", verbose = TRUE) {
     if (is.null(shp)) {
       ## download shapefile from pretrained model
       shp <- load_pretrained_shapefile(x@model_name)
@@ -37,7 +39,9 @@ setMethod("plot", "VGMSFH",
     } else if(type == "compare") {
       plot_compare(x, shp, var_idx)
     } else {
-      warning("Plot type not supported.")
+      if(verbose){
+        warning("Plot type not supported.")
+      }
     }
   })
 
@@ -96,7 +100,7 @@ plot_compare <- function(object, shp, var_idx) {
 
 #' @importFrom sf st_read
 #' @importFrom utils download.file
-load_pretrained_shapefile <- function(model_name) {
+load_pretrained_shapefile <- function(model_name, verbose = TRUE) {
   base_url <-  "https://raw.githubusercontent.com/zhenhua-wang/vmsae_resources/refs/heads/main/shp_processed/"
   ## download shapefiles
   files <- paste0(model_name, c(".cpg", ".dbf", ".prj", ".shp", ".shx"))
@@ -105,10 +109,12 @@ load_pretrained_shapefile <- function(model_name) {
   file_paths <- file.path(save_dir, files)
   tryCatch({
     for (i in seq_along(urls)) {
-      download.file(urls[i], file_paths[i], mode = "wb")
+      download.file(urls[i], file_paths[i], mode = "wb", quiet = !verbose)
     }
   }, error = function(e) {
-    cat("Error:", model_name, "could not be found. Please provide the necessary shapefiles in plot function.\n")
+    if(verbose){
+      cat("Error:", model_name, "could not be found. Please provide the necessary shapefiles in plot function.\n")
+    }
   })
   ## load into sf
   shp_path <- file.path(save_dir, grep("shp$", files, value = TRUE))
@@ -135,18 +141,17 @@ load_pretrained_shapefile <- function(model_name) {
 #' This function extracts the posterior samples for the specified variable index, and combines it with \code{confint()} to compute credible intervals. The result is a compact summary table of central tendency and uncertainty.
 #'
 #' @examples
-#' \dontrun{
-#' result <- vgmsfh_numpyro(...)
-#' summary(result)  # Summary of beta_samples for variable 1
-#' summary(result, var_idx = 2, field = "yhat_samples")
-#' }
+#' library(vmsae)
+#' example_model <- readRDS(system.file("example", "example_model.Rds", package = "vmsae"))
+#' summary(example_model)  # Summary of beta_samples for variable 1
+#' summary(example_model, var_idx = 2, field = "yhat_samples")
 #'
 #' @importFrom methods slot
 #'
 #' @export
 setMethod("summary", "VGMSFH", function(object, var_idx = 1, field = "beta_samples") {
   var_mean <- apply(ith_data(slot(object, field), var_idx), 2, mean)
-  var_summary <- confint(object, var_idx, field)
+  var_summary <- confint(object, var_idx = var_idx, field = field)
   var_summary["mean"] <- var_mean
   var_summary <- var_summary[, c("mean", "lower", "upper")]
   return(var_summary)
@@ -167,11 +172,10 @@ setMethod("summary", "VGMSFH", function(object, var_idx = 1, field = "beta_sampl
 #' @return A numeric vector of posterior means for the selected coefficient type.
 #'
 #' @examples
-#' \dontrun{
-#' result <- vgmsfh_numpyro(...)
-#' coef(result)  # Get fixed effect coefficients
-#' coef(result, type = "spatial")  # Get spatial random effects
-#' }
+#' library(vmsae)
+#' example_model <- readRDS(system.file("example", "example_model.Rds", package = "vmsae"))
+#' coef(example_model)  # Get fixed effect coefficients
+#' coef(example_model, type = "spatial")  # Get spatial random effects
 #'
 #' @export
 setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
@@ -202,11 +206,10 @@ setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
 #' The function extracts posterior samples for the specified variable and then computes quantiles to form 95\% credible intervals. This is useful for uncertainty quantification in model predictions or parameter estimates.
 #'
 #' @examples
-#' \dontrun{
-#' result <- vgmsfh_numpyro(...)
-#' confint(result)  # Get credible intervals for predicted values
-#' confint(result, field = "beta_samples")  # For fixed effects
-#' }
+#' library(vmsae)
+#' example_model <- readRDS(system.file("example", "example_model.Rds", package = "vmsae"))
+#' confint(example_model)  # Get credible intervals for predicted values
+#' confint(example_model, field = "beta_samples")  # For fixed effects
 #'
 #' @importFrom methods slot
 #' @importFrom stats quantile
@@ -221,9 +224,11 @@ setMethod("confint", "VGMSFH", function(object, var_idx = 1, field = "yhat_sampl
   return(var_confint)
 })
 
-ith_data <- function(data, var_idx) {
+ith_data <- function(data, var_idx, verbose = TRUE) {
   if (is.null(dim(data))) {
-    warning("Univariate data, returning the only response.")
+    if(verbose){
+      warning("Univariate data, returning the only response.")
+    }
     return(data)
   } else if (length(dim(data)) == 2) {
     return(data[, var_idx])

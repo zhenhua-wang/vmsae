@@ -10,12 +10,19 @@ install_environment(envname = "vmsae")
 \item{envname}{Character. The name of the Python environment to create or update.
 Default is \code{"vmsae"}.}
 }
+\value{
+No return value, called for side effects
+}
 \description{
 This function creates the vmsae python environment and installs required packages.
 }
 \examples{
-\dontrun{
+\donttest{
+library(vmsae)
 install_environment()          # Install into default "vmsae" environment
+}
+
+\dontrun{
 install_environment("custom")  # Install into a custom-named environment
 }
 

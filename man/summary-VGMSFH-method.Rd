@@ -28,10 +28,9 @@ This method provides a summary of posterior samples from a \code{VGMSFH} object,
 This function extracts the posterior samples for the specified variable index, and combines it with \code{confint()} to compute credible intervals. The result is a compact summary table of central tendency and uncertainty.
 }
 \examples{
-\dontrun{
-result <- vgmsfh_numpyro(...)
-summary(result)  # Summary of beta_samples for variable 1
-summary(result, var_idx = 2, field = "yhat_samples")
-}
+library(vmsae)
+example_model <- readRDS(system.file("example", "example_model.Rds", package = "vmsae"))
+summary(example_model)  # Summary of beta_samples for variable 1
+summary(example_model, var_idx = 2, field = "yhat_samples")
 
 }

@@ -8,12 +8,13 @@ train_vae(
   W,
   GEOID,
   model_name,
-  save_dir = ".",
+  save_dir,
   n_samples = 10000,
   batch_size = 256,
   epoch = 10000,
   lr_init = 0.001,
-  lr_min = 1e-07
+  lr_min = 1e-07,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ train_vae(
 \item{lr_init}{Numeric. Initial learning rate. Default is \code{0.001}.}
 
 \item{lr_min}{Numeric. Minimum learning rate at the final epoch. Default is \code{1e-7}.}
+
+\item{verbose}{Logical; if \code{TRUE} (default), prints progress.}
 }
 \value{
 A named list containing:
@@ -52,25 +55,22 @@ with VAE training implemented in Python. It uses \code{py$train_vae()} defined i
 sourced Python modules (see \code{\link{load_environment}}).
 }
 \examples{
-\dontrun{
-library(sf)
-library(tidyverse)
-library(spdep)
+\donttest{
 library(vmsae)
+library(sf)
 install_environment()
 load_environment()
 
-acs_data <- read_sf(system.file("example_data", "mo_county.shp", package = "vmsae")) \%>\%
-  na.omit()
-W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
+acs_data <- read_sf(system.file("example", "mo_county.shp", package = "vmsae"))
+W <- readRDS(system.file("example", "W.Rds", package = "vmsae"))
 
 loss <- train_vae(W = W,
   GEOID = acs_data$GEOID,
   model_name = "test",
-  save_dir = ".",
-  n_samples = 10000,
+  save_dir = tempdir(),
+  n_samples = 1000, # set to larger values in practice, e.g. 10000.
   batch_size = 256,
-  epoch = 10000)
+  epoch = 1000)     # set to larger values in practice, e.g. 10000.
 }
 
 }

@@ -4,21 +4,29 @@
 \alias{download_pretrained_vae}
 \title{Download and Extract a Pretrained VAE Model}
 \usage{
-download_pretrained_vae(model_name, save_dir)
+download_pretrained_vae(model_name, save_dir, verbose = TRUE)
 }
 \arguments{
 \item{model_name}{Character. The name of the model file (without extension) to download.
 This should correspond to a \verb{*model_name*.zip} file hosted on Zenodo (e.g., \code{"ca_county"}).}
 
 \item{save_dir}{Character. The local directory where the model should be saved and extracted.}
+
+\item{verbose}{Logical; if \code{TRUE} (default), prints progress and error messages.}
+}
+\value{
+No return value, called for side effects
 }
 \description{
 This function downloads a pretrained VAE model archive from Zenodo, extracts its contents
 into a specified directory, and removes the downloaded ZIP file after extraction.
 }
 \examples{
-\dontrun{
-download_pretrained_vae("vae_spatial", ".")
+\donttest{
+library(vmsae)
+install_environment()
+load_environment()
+download_pretrained_vae("mo_county", tempdir())
 }
 
 }

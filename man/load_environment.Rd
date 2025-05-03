@@ -10,6 +10,9 @@ load_environment(envname = "vmsae")
 \item{envname}{Character. The name of the Python environment to create or update.
 Default is \code{"vmsae"}.}
 }
+\value{
+No return value, called for side effects
+}
 \description{
 This function activates a specified Python virtual environment and sources Python modules
 used by the \pkg{vmsae} package, including models and python scripts.
@@ -27,8 +30,14 @@ The environment must be created beforehand (e.g., using \code{install_environmen
 and must include all Python dependencies required by these modules.
 }
 \examples{
-\dontrun{
+\donttest{
+library(vmsae)
+
+install_environment()
 load_environment()          # Load default "vmsae" environment
+}
+\dontrun{
+install_environment("custom")
 load_environment("custom") # Load custom virtual environment
 }
 

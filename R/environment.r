@@ -5,9 +5,15 @@
 #' @param envname Character. The name of the Python environment to create or update.
 #'        Default is `"vmsae"`.
 #'
+#' @return No return value, called for side effects
+#'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' library(vmsae)
 #' install_environment()          # Install into default "vmsae" environment
+#' }
+#'
+#' \dontrun{
 #' install_environment("custom")  # Install into a custom-named environment
 #' }
 #'
@@ -41,9 +47,17 @@ install_environment <- function(envname = "vmsae") {
 #' The environment must be created beforehand (e.g., using `install_environment()`),
 #' and must include all Python dependencies required by these modules.
 #'
+#' @return No return value, called for side effects
+#'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' library(vmsae)
+#'
+#' install_environment()
 #' load_environment()          # Load default "vmsae" environment
+#'}
+#' \dontrun{
+#' install_environment("custom")
 #' load_environment("custom") # Load custom virtual environment
 #' }
 #'
@@ -73,28 +87,39 @@ load_environment <- function(envname = "vmsae") {
 #' @param model_name Character. The name of the model file (without extension) to download.
 #'        This should correspond to a `*model_name*.zip` file hosted on Zenodo (e.g., `"ca_county"`).
 #' @param save_dir Character. The local directory where the model should be saved and extracted.
+#' @param verbose Logical; if \code{TRUE} (default), prints progress and error messages.
+#'
+#' @return No return value, called for side effects
 #'
 #' @examples
-#' \dontrun{
-#' download_pretrained_vae("vae_spatial", ".")
+#' \donttest{
+#' library(vmsae)
+#' install_environment()
+#' load_environment()
+#' download_pretrained_vae("mo_county", tempdir())
 #' }
 #'
 #' @importFrom utils download.file
 #' @importFrom utils unzip
 #'
 #' @export
-download_pretrained_vae <- function(model_name, save_dir) {
+download_pretrained_vae <- function(model_name, save_dir, verbose = TRUE) {
   url <- "https://zenodo.org/records/14993110/files/%s?download=1"
   zip_name <- paste0(model_name, ".zip")
   zip_save_path <- file.path(save_dir, zip_name)
   tryCatch({
     download.file(
       url = sprintf(url, zip_name),
-      destfile = zip_save_path)
+      destfile = zip_save_path,
+      quiet = !verbose)
     unzip(zipfile = zip_save_path, exdir = save_dir)
     file.remove(zip_save_path)
-    cat(model_name, "downloaded successfully\n")
+    if(verbose){
+      cat(model_name, "downloaded successfully\n")
+    }
   }, error = function(e) {
-    cat("Error:", model_name, "could not be found.\n")
+    if(verbose){
+      cat("Error:", model_name, "could not be found.\n")
+    }
   })
 }

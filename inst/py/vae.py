@@ -67,7 +67,7 @@ class VAE(nn.Module):
         return loss, RCL, KLD
 
     def fit(self, dataloader, lr, lr_gamma, beta, epoch,
-            clip_value=1.0, device='cpu'):
+            clip_value=1.0, device='cpu', verbose=True):
         # train
         loss_list = []
         loss_RCL_list = []
@@ -75,7 +75,7 @@ class VAE(nn.Module):
         n_batch = len(dataloader)
         optimizer = torch.optim.Adamax(self.parameters(), lr=lr)
         scheduler = lr_scheduler.ExponentialLR(optimizer, gamma=lr_gamma)
-        t = trange(epoch, dynamic_ncols=True)
+        t = trange(epoch, dynamic_ncols=True, disable=not verbose)
         for e in t:
             beta = beta
             # set training mode

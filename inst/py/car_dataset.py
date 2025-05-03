@@ -3,10 +3,10 @@ from torch.distributions import MultivariateNormal, Uniform
 import torch
 from tqdm import trange
 
-def generate_CAR_dataset(n_samples, D, W, device="cpu"):
+def generate_CAR_dataset(n_samples, D, W, device="cpu", verbose=True):
     n = W.shape[0]
     Z = torch.randn(n_samples, n).to(device)
-    tbar = trange(n_samples)
+    tbar = trange(n_samples, disable=not verbose)
     for fct_id in tbar:
         phi = Uniform(0, 0.99).sample().to(device)
         prec = D - phi * W

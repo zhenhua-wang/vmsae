@@ -35,6 +35,7 @@ setClass("Decoder",
 #' @param epoch Integer. Number of training epochs. Default is \code{10000}.
 #' @param lr_init Numeric. Initial learning rate. Default is \code{0.001}.
 #' @param lr_min Numeric. Minimum learning rate at the final epoch. Default is \code{1e-7}.
+#' @param verbose Logical; if \code{TRUE} (default), prints progress.
 #'
 #' @return A named list containing:
 #' \item{loss}{Total training loss}
@@ -47,40 +48,38 @@ setClass("Decoder",
 #' sourced Python modules (see \code{\link{load_environment}}).
 #'
 #' @examples
-#' \dontrun{
-#' library(sf)
-#' library(tidyverse)
-#' library(spdep)
+#' \donttest{
 #' library(vmsae)
+#' library(sf)
 #' install_environment()
 #' load_environment()
 #'
-#' acs_data <- read_sf(system.file("example_data", "mo_county.shp", package = "vmsae")) %>%
-#'   na.omit()
-#' W <- nb2mat(poly2nb(acs_data), style = "B", zero.policy = TRUE)
+#' acs_data <- read_sf(system.file("example", "mo_county.shp", package = "vmsae"))
+#' W <- readRDS(system.file("example", "W.Rds", package = "vmsae"))
 #'
 #' loss <- train_vae(W = W,
 #'   GEOID = acs_data$GEOID,
 #'   model_name = "test",
-#'   save_dir = ".",
-#'   n_samples = 10000,
+#'   save_dir = tempdir(),
+#'   n_samples = 1000, # set to larger values in practice, e.g. 10000.
 #'   batch_size = 256,
-#'   epoch = 10000)
+#'   epoch = 1000)     # set to larger values in practice, e.g. 10000.
 #' }
 #'
 #' @importFrom reticulate py
 #' @importFrom utils write.table
 #'
 #' @export
-train_vae <- function(W, GEOID, model_name, save_dir = ".",
+train_vae <- function(W, GEOID, model_name, save_dir,
                       n_samples = 10000, batch_size = 256, epoch = 10000,
-                      lr_init = 0.001, lr_min = 1e-7) {
+                      lr_init = 0.001, lr_min = 1e-7,
+                      verbose = TRUE) {
   save_path <- get_save_path(model_name, save_dir)
   vae_path <- save_path$vae_path
   GEOID_path <- save_path$GEOID_path
   loss <- py$train_vae(W, vae_path,
     n_samples, batch_size, epoch,
-    lr_init, lr_min)
+    lr_init, lr_min, verbose)
   write.table(GEOID, file = GEOID_path,
     row.names = FALSE, col.names = FALSE)
   return(list(loss = loss[[1]], RCL = loss[[2]], KLD = loss[[3]]))
@@ -99,7 +98,8 @@ train_vae <- function(W, GEOID, model_name, save_dir = ".",
 #' This function assumes the model was trained and saved using `train_vae()`, and that the decoder weights are stored in a file compatible with `torch::load()` (via reticulate). It extracts the decoder input/output weights and biases, along with region GEOIDs, and returns them as an S4 object of class `Decoder`.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' library(vmsae)
 #' install_environment()
 #' load_environment()
 #' decoder <- load_vae(model_name = "mo_county")

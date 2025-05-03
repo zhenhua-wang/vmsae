@@ -4,7 +4,7 @@
 \alias{plot,VGMSFH-method}
 \title{Plot VGMSFH Result}
 \usage{
-\S4method{plot}{VGMSFH}(x, shp = NULL, var_idx = 1, type = "compare")
+\S4method{plot}{VGMSFH}(x, shp = NULL, var_idx = 1, type = "compare", verbose = TRUE)
 }
 \arguments{
 \item{x}{An object of class \code{VGMSFH}, containing posterior samples and direct estimates from the model.}
@@ -18,6 +18,8 @@
 \item \code{"compare"} – compare direct estimates and model-based estimates.
 \item \code{"estimate"} – show the posterior mean and standard deviation of the model estimate.
 }}
+
+\item{verbose}{Logical; if \code{TRUE} (default), prints error messages.}
 }
 \value{
 A \code{ggplot} object. The plot is rendered to the active device.
@@ -31,10 +33,11 @@ The function provides spatial visualization of model results. It supports both u
 If no shapefile is provided, a default geometry is loaded from the pretrained repository.
 }
 \examples{
-\dontrun{
-result <- vgmsfh_numpyro(...)
-plot(result, type = "compare")
-plot(result, type = "estimate", var_idx = 2)
-}
+library(vmsae)
+library(sf)
+example_model <- readRDS(system.file("example", "example_model.Rds", package = "vmsae"))
+example_shp <- read_sf(system.file("example", "mo_county.shp", package = "vmsae"))
+plot(example_model, shp = example_shp, type = "compare")
+plot(example_model, shp = example_shp, type = "estimate", var_idx = 2)
 
 }
