@@ -17,12 +17,13 @@ No return value, called for side effects
 This function creates the vmsae python environment and installs required packages.
 }
 \examples{
-\donttest{
-library(vmsae)
-install_environment()          # Install into default "vmsae" environment
-}
-
 \dontrun{
+library(vmsae)
+# this function is time consuming for the first run
+install_environment()          # Install into default "vmsae" environment
+
+
+# this step is time consuming for the first run
 install_environment("custom")  # Install into a custom-named environment
 }
 

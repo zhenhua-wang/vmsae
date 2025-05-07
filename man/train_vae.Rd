@@ -55,9 +55,10 @@ with VAE training implemented in Python. It uses \code{py$train_vae()} defined i
 sourced Python modules (see \code{\link{load_environment}}).
 }
 \examples{
-\donttest{
+\dontrun{
 library(vmsae)
 library(sf)
+# this function is time consuming for the first run
 install_environment()
 load_environment()
 

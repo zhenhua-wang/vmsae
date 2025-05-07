@@ -52,9 +52,10 @@ This function runs the Variational Generalized Multivariate Spatil Fay-Herriot m
 This function uses a pretrained VAE decoder to parameterize the CAR prior and enables scalable inference through NumPyro. It is suitable for both univariate and multivariate response modeling in spatial domains.
 }
 \examples{
-\donttest{
+\dontrun{
 library(sf)
 library(vmsae)
+# this function is time consuming for the first run
 install_environment()
 load_environment()
 

@@ -22,8 +22,9 @@ This function downloads a pretrained VAE model archive from Zenodo, extracts its
 into a specified directory, and removes the downloaded ZIP file after extraction.
 }
 \examples{
-\donttest{
+\dontrun{
 library(vmsae)
+# this function is time consuming for the first run
 install_environment()
 load_environment()
 download_pretrained_vae("mo_county", tempdir())

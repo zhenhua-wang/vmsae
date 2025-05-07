@@ -8,12 +8,13 @@
 #' @return No return value, called for side effects
 #'
 #' @examples
-#' \donttest{
-#' library(vmsae)
-#' install_environment()          # Install into default "vmsae" environment
-#' }
-#'
 #' \dontrun{
+#' library(vmsae)
+#' # this function is time consuming for the first run
+#' install_environment()          # Install into default "vmsae" environment
+#'
+#'
+#' # this step is time consuming for the first run
 #' install_environment("custom")  # Install into a custom-named environment
 #' }
 #'
@@ -50,13 +51,14 @@ install_environment <- function(envname = "vmsae") {
 #' @return No return value, called for side effects
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library(vmsae)
 #'
+#' # this function is time consuming for the first run
 #' install_environment()
 #' load_environment()          # Load default "vmsae" environment
-#'}
-#' \dontrun{
+#'
+#' # this function is time consuming for the first run
 #' install_environment("custom")
 #' load_environment("custom") # Load custom virtual environment
 #' }
@@ -92,8 +94,9 @@ load_environment <- function(envname = "vmsae") {
 #' @return No return value, called for side effects
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library(vmsae)
+#' # this function is time consuming for the first run
 #' install_environment()
 #' load_environment()
 #' download_pretrained_vae("mo_county", tempdir())

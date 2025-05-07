@@ -51,9 +51,10 @@ setClass("VGMSFH",
 #' Wang, Z., Parker, P. A., & Holan, S. H. (2025). Variational Autoencoded Multivariate Spatial Fay-Herriot Models. arXiv:2503.14710. \url{https://arxiv.org/abs/2503.14710}
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library(sf)
 #' library(vmsae)
+#' # this function is time consuming for the first run
 #' install_environment()
 #' load_environment()
 #'

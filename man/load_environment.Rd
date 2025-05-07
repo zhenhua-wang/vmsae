@@ -30,13 +30,14 @@ The environment must be created beforehand (e.g., using \code{install_environmen
 and must include all Python dependencies required by these modules.
 }
 \examples{
-\donttest{
+\dontrun{
 library(vmsae)
 
+# this function is time consuming for the first run
 install_environment()
 load_environment()          # Load default "vmsae" environment
-}
-\dontrun{
+
+# this function is time consuming for the first run
 install_environment("custom")
 load_environment("custom") # Load custom virtual environment
 }
