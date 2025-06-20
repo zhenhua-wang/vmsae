@@ -128,7 +128,7 @@ load_pretrained_shapefile <- function(model_name, verbose = TRUE) {
 #'
 #' @param object An object of class \code{VGMSFH}, containing posterior samples from the model.
 #' @param var_idx Integer. The index of the variable of interest (for multivariate models). Default is \code{1}.
-#' @param field Character. The name of the slot in the \code{VGMSFH} object to summarize (e.g., \code{"beta_samples"}, \code{"spatial_samples"}, \code{"yhat_samples"}). Default is \code{"beta_samples"}.
+#' @param field Character. The name of the slot in the \code{VGMSFH} object to summarize (e.g., \code{"beta_samples"}, \code{"phi_samples"}, \code{"yhat_samples"}). Default is \code{"beta_samples"}.
 #'
 #' @return A data frame with columns:
 #' \itemize{
@@ -182,7 +182,7 @@ setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
   if (type == "fixed") {
     var <- ith_data(object@beta_samples, var_idx)
   } else if (type == "spatial") {
-    var <- ith_data(object@spatial_samples, var_idx)
+    var <- ith_data(object@phi_samples, var_idx)
   }
   var_mean <- apply(var, 2, mean)
   return(var_mean)
@@ -194,7 +194,7 @@ setMethod("coef", "VGMSFH", function(object, var_idx = 1, type = "fixed") {
 #'
 #' @param object An object of class \code{VGMSFH}.
 #' @param var_idx Integer. The index of the variable of interest (for multivariate models). Default is \code{1}.
-#' @param field Character. The name of the slot to summarize (e.g., \code{"yhat_samples"}, \code{"beta_samples"}, \code{"spatial_samples"}). Default is \code{"yhat_samples"}.
+#' @param field Character. The name of the slot to summarize (e.g., \code{"yhat_samples"}, \code{"beta_samples"}, \code{"phi_samples"}). Default is \code{"yhat_samples"}.
 #'
 #' @return A data frame with two columns:
 #' \itemize{

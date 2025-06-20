@@ -11,7 +11,7 @@
 
 \item{var_idx}{Integer. The index of the variable of interest (for multivariate models). Default is \code{1}.}
 
-\item{field}{Character. The name of the slot in the \code{VGMSFH} object to summarize (e.g., \code{"beta_samples"}, \code{"spatial_samples"}, \code{"yhat_samples"}). Default is \code{"beta_samples"}.}
+\item{field}{Character. The name of the slot in the \code{VGMSFH} object to summarize (e.g., \code{"beta_samples"}, \code{"phi_samples"}, \code{"yhat_samples"}). Default is \code{"beta_samples"}.}
 }
 \value{
 A data frame with columns:

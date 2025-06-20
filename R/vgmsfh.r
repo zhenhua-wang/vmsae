@@ -42,7 +42,7 @@ setClass("VGMSFH",
 #' \itemize{
 #'   \item \code{direct_estimate}: the observed response data,
 #'   \item \code{yhat_samples}: posterior samples of the latent population process,
-#'   \item \code{spatial_samples}: posterior samples of spatial random effects (CAR),
+#'   \item \code{phi_samples}: posterior samples of spatial random effects (CAR),
 #'   \item \code{beta_samples}: posterior samples of fixed effect coefficients,
 #'   \item \code{other_samples}: a list containing all sampled parameters, including \code{mu}, \code{delta}, and other intermediate quantities.
 #' }
