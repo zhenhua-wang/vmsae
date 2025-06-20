@@ -4,11 +4,14 @@
 \alias{load_environment}
 \title{Load Python Environment and Source Model Modules}
 \usage{
-load_environment(envname = "vmsae")
+load_environment(envname = "vmsae", is_conda = FALSE)
 }
 \arguments{
 \item{envname}{Character. The name of the Python environment to create or update.
 Default is \code{"vmsae"}.}
+
+\item{is_conda}{Boolean. The indicator for whether the loaded environment is a conda environment.
+Default is \code{"FALSE"}.}
 }
 \value{
 No return value, called for side effects
@@ -40,6 +43,8 @@ load_environment()          # Load default "vmsae" environment
 # this function is time consuming for the first run
 install_environment("custom")
 load_environment("custom") # Load custom virtual environment
+
+load_environment("custom", is_conda = TRUE) # Load custom conda environment
 }
 
 }

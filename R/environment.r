@@ -35,6 +35,8 @@ install_environment <- function(envname = "vmsae") {
 #'
 #' @param envname Character. The name of the Python environment to create or update.
 #'        Default is `"vmsae"`.
+#' @param is_conda Boolean. The indicator for whether the loaded environment is a conda environment.
+#'        Default is `"FALSE"`.
 #'
 #' @details
 #' The function loads four Python scripts located in the package's `py/` directory:
@@ -61,6 +63,8 @@ install_environment <- function(envname = "vmsae") {
 #' # this function is time consuming for the first run
 #' install_environment("custom")
 #' load_environment("custom") # Load custom virtual environment
+#'
+#' load_environment("custom", is_conda = TRUE) # Load custom conda environment
 #' }
 #'
 #' @importFrom reticulate use_condaenv
