@@ -4,11 +4,14 @@
 \alias{install_environment}
 \title{Install python environment.}
 \usage{
-install_environment(envname = "vmsae")
+install_environment(envname = "vmsae", use_gpu = FALSE)
 }
 \arguments{
 \item{envname}{Character. The name of the Python environment to create or update.
 Default is \code{"vmsae"}.}
+
+\item{use_gpu}{Boolean. An indicator for whether to install packages with GPU support.
+Default is \code{FALSE}.}
 }
 \value{
 No return value, called for side effects

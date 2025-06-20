@@ -4,6 +4,8 @@
 #'
 #' @param envname Character. The name of the Python environment to create or update.
 #'        Default is `"vmsae"`.
+#' @param use_gpu Boolean. An indicator for whether to install packages with GPU support.
+#'        Default is `FALSE`.
 #'
 #' @return No return value, called for side effects
 #'
@@ -22,10 +24,21 @@
 #' @importFrom reticulate py_install
 #'
 #' @export
-install_environment <- function(envname = "vmsae") {
+install_environment <- function(envname = "vmsae", use_gpu = FALSE) {
   install_python()
-  py_install("torch", envname = envname)
-  py_install("numpyro", envname = envname)
+  if (use_gpu) {
+    py_install("torch", envname = envname)
+    py_install(
+      packages = "numpyro[cuda]",
+      pip = TRUE,
+      extra_args = c("-f",
+        "https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"),
+      envname = envname
+    )
+  } else {
+    py_install("torch", envname = envname)
+    py_install("numpyro", envname = envname)
+  }
 }
 
 #' Load Python Environment and Source Model Modules
