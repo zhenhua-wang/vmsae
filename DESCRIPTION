@@ -1,6 +1,6 @@
 Package: vmsae
 Title: Variational Multivariate Spatial Small Area Estimation
-Version: 0.1.0
+Version: 0.1.1
 Maintainer: Zhenhua Wang <zhenhua.wang@missouri.edu>
 Authors@R: c(
     person("Zhenhua", "Wang", email = "zhenhua.wang@missouri.edu", role = c("aut", "cre")),
