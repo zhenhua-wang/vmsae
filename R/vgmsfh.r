@@ -5,7 +5,7 @@
 #' @slot model_name Character. The name of the trained VAE model.
 #' @slot direct_estimate Array. Direct estimates of parameters.
 #' @slot yhat_samples Array. Posterior samples of the estimated parameters.
-#' @slot spatial_samples Array. Posterior samples of the estimated spatial random effects.
+#' @slot phi_samples Array. Posterior samples of the estimated spatial random effects.
 #' @slot beta_samples Array. Posterior samples of the fixed effect coefficients.
 #' @slot all_samples List. Posterior samples of all parameters in the VGMSFH model.
 #'
@@ -15,7 +15,7 @@ setClass("VGMSFH",
     model_name = "character",
     direct_estimate = "array",
     yhat_samples = "array",
-    spatial_samples = "array",
+    phi_samples = "array",
     beta_samples = "array",
     all_samples = "list"
   )
@@ -104,13 +104,14 @@ vgmsfh_numpyro <- function(y, y_sigma, X, W, GEOID,
   samples <- py$run_vgmcar(
     p_y, data$y, data$y_sigma, data$X, data$W, W_in, B_in, W_out, B_out,
     num_samples, num_warmup, verbose, use_gpu)
+  other_samples <- samples[!(names(samples) %in% c("y_hat", "phi", "beta"))]
   vgmsfh <- new("VGMSFH",
     model_name = model_name,
     direct_estimate = y,
     yhat_samples = samples$y_hat,
-    spatial_samples = samples$car,
+    phi_samples = samples$phi,
     beta_samples = samples$beta,
-    all_samples = samples)
+    other_samples = other_samples)
   return(vgmsfh)
 }
 

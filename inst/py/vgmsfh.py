@@ -32,28 +32,28 @@ def spatial_effect(n_latent, N, p_y, W_in, B_in, W_out, B_out, W):
     # marginal
     z1 = numpyro.sample('z1', dist.Normal(jnp.zeros(n_latent),
                                           jnp.ones(n_latent)))
-    car1_latent = decoder_learned(z1, W_in, B_in, W_out, B_out)
-    car1_sigma2 = numpyro.sample('car1_sigma2',
+    phi1_latent = decoder_learned(z1, W_in, B_in, W_out, B_out)
+    phi1_sigma2 = numpyro.sample('phi1_sigma2',
                                  dist.InverseGamma(0.001, 0.001))
-    car1 = jnp.sqrt(car1_sigma2) * car1_latent
-    car = car1
+    phi1 = jnp.sqrt(phi1_sigma2) * phi1_latent
+    phi = phi1
     # conditional
-    cari1 = car1
+    phii1 = phi1
     for i in range(2, p_y + 1):
         zi = numpyro.sample(f'z{i}', dist.Normal(jnp.zeros(n_latent),
                                                  jnp.ones(n_latent)))
-        cari_latent = decoder_learned(zi, W_in, B_in, W_out, B_out)
-        cari_sigma2 = numpyro.sample(f'car{i}_sigma2',
+        phii_latent = decoder_learned(zi, W_in, B_in, W_out, B_out)
+        phii_sigma2 = numpyro.sample(f'phi{i}_sigma2',
                                      dist.InverseGamma(0.001, 0.001))
-        cari_eta0 = numpyro.sample(f'car{i}_eta0', dist.Normal(0, 100))
-        cari_eta1 = numpyro.sample(f'car{i}_eta1', dist.Normal(0, 100))
-        A = cari_eta0*jnp.eye(N) + cari_eta1*W
-        cari_given_cari1 = A @ cari1 + jnp.sqrt(cari_sigma2) * cari_latent
-        car = jnp.column_stack((cari_given_cari1, car))
-        cari1 = cari_given_cari1
+        phii_eta0 = numpyro.sample(f'phi{i}_eta0', dist.Normal(0, 100))
+        phii_eta1 = numpyro.sample(f'phi{i}_eta1', dist.Normal(0, 100))
+        A = phii_eta0*jnp.eye(N) + phii_eta1*W
+        phii_given_phii1 = A @ phii1 + jnp.sqrt(phii_sigma2) * phii_latent
+        phi = jnp.column_stack((phii_given_phii1, phi))
+        phii1 = phii_given_phii1
         pass
-    car = numpyro.deterministic('car', car)
-    return car
+    phi = numpyro.deterministic('phi', phi)
+    return phi
 
 def interpolation(N, Y, sigma_y, yhat):
     # incidence matrix
@@ -75,7 +75,7 @@ def interpolation(N, Y, sigma_y, yhat):
         pass
     return Y_vec, sigma_y_vec, yhat_vec
 
-def vgmcar(args):
+def vgmsfh(args):
     # parameters
     n_latent = args['n_latent']
     Y = args['Y']
@@ -90,7 +90,7 @@ def vgmcar(args):
     p_y = Y.shape[1]
     p_x = X.shape[1]
     # spatial random effect
-    car = spatial_effect(n_latent, N, p_y, W_in, B_in, W_out, B_out, W)
+    phi = spatial_effect(n_latent, N, p_y, W_in, B_in, W_out, B_out, W)
     # fixed effect regression
     mu, beta = regression(N, p_y, p_x)
     fixed = jnp.matmul(X, beta)
@@ -100,17 +100,17 @@ def vgmcar(args):
     # reshape for univariate case
     if p_y == 1:
         mu = np.repeat(mu, N).reshape(-1, 1)
-        car = car.reshape(-1, 1)
+        phi = phi.reshape(-1, 1)
         delta = delta.reshape(-1, 1)
         pass
-    yhat = numpyro.deterministic('y_hat', mu + fixed + car + delta)
+    yhat = numpyro.deterministic('y_hat', mu + fixed + phi + delta)
     # imputation
     Y_vec, sigma_y_vec, yhat_vec = interpolation(N, Y, sigma_y, yhat)
     # data model
     Y_vec = numpyro.sample("Y", dist.Normal(yhat_vec, sigma_y_vec), obs=Y_vec)
     pass
 
-def run_vgmcar(p_y, y, y_sigma, X, W,
+def run_vgmsfh(p_y, y, y_sigma, X, W,
                W1, B1, W2, B2,
                num_samples, num_warmup, verbose=True, use_gpu=False):
     device = 'cpu' if not use_gpu else backend.get_backend().platform
@@ -139,8 +139,8 @@ def run_vgmcar(p_y, y, y_sigma, X, W,
         'W': W,
         'X': X
     }
-    kernel = NUTS(vgmcar, find_heuristic_step_size=True)
-    mcmc_car = MCMC(kernel, num_samples=num_samples, num_warmup=num_warmup)
-    mcmc_car.run(jax.random.PRNGKey(0), mcmc_data)
-    priorvae_samples = {key: np.array(value) for key, value in mcmc_car.get_samples().items()}
+    kernel = NUTS(vgmsfh, find_heuristic_step_size=True)
+    mcmc_vgmsfh = MCMC(kernel, num_samples=num_samples, num_warmup=num_warmup)
+    mcmc_vgmsfh.run(jax.random.PRNGKey(0), mcmc_data)
+    priorvae_samples = {key: np.array(value) for key, value in mcmc_vgmsfh.get_samples().items()}
     return priorvae_samples
