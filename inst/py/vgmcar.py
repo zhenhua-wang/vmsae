@@ -4,9 +4,9 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from numpyro.infer import MCMC, NUTS
-from jax.lib import xla_bridge
+from jax.extend import backend
 
-device = xla_bridge.get_backend().platform
+device = backend.get_backend().platform
 numpyro.set_platform(device)
 
 def decoder_learned(z, W_in, B_in, W_out, B_out):
