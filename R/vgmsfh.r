@@ -34,6 +34,7 @@ setClass("VGMSFH",
 #' @param save_dir Character. The directory where the VAE model is stored. If \code{NULL}, a default pretrained model directory is used.
 #' @param num_samples Integer. Number of posterior samples to draw. Default is 1000.
 #' @param num_warmup Integer. Number of warmup (burn-in) iterations. Default is 1000.
+#' @param verbose Logical; if \code{TRUE} (default), prints progress.
 #' @param use_gpu Boolean. Use GPU if available.
 #'        Default is `FALSE`.
 #'
@@ -86,7 +87,7 @@ setClass("VGMSFH",
 vgmsfh_numpyro <- function(y, y_sigma, X, W, GEOID,
                            model_name, save_dir = NULL,
                            num_warmup = 1000, num_samples = 1000,
-                           use_gpu = FALSE) {
+                           verbose = TRUE, use_gpu = FALSE) {
   vae_weights <- load_vae(model_name, save_dir)
   W_in <- vae_weights@W_in
   B_in <- vae_weights@B_in
@@ -102,7 +103,7 @@ vgmsfh_numpyro <- function(y, y_sigma, X, W, GEOID,
   data <- sort_data(y, y_sigma, X, W, GEOID, GEOID_vae)
   samples <- py$run_vgmcar(
     p_y, data$y, data$y_sigma, data$X, data$W, W_in, B_in, W_out, B_out,
-    num_samples, num_warmup, use_gpu)
+    num_samples, num_warmup, verbose, use_gpu)
   vgmsfh <- new("VGMSFH",
     model_name = model_name,
     direct_estimate = y,

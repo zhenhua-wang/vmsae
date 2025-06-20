@@ -14,6 +14,7 @@ vgmsfh_numpyro(
   save_dir = NULL,
   num_warmup = 1000,
   num_samples = 1000,
+  verbose = TRUE,
   use_gpu = FALSE
 )
 }
@@ -35,6 +36,8 @@ vgmsfh_numpyro(
 \item{num_warmup}{Integer. Number of warmup (burn-in) iterations. Default is 1000.}
 
 \item{num_samples}{Integer. Number of posterior samples to draw. Default is 1000.}
+
+\item{verbose}{Logical; if \code{TRUE} (default), prints progress.}
 
 \item{use_gpu}{Boolean. Use GPU if available.
 Default is \code{FALSE}.}
