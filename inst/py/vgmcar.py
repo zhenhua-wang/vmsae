@@ -113,7 +113,7 @@ def vgmcar(args):
 def run_vgmcar(p_y, y, y_sigma, X, W,
                W1, B1, W2, B2,
                num_samples, num_warmup, verbose=True, use_gpu=False):
-    device = backend.get_backend().platform
+    device = 'cpu' if not use_gpu else backend.get_backend().platform
     numpyro.set_platform(device)
     if verbose:
         if use_gpu and device == 'cpu':
