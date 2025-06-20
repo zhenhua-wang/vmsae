@@ -27,17 +27,15 @@
 install_environment <- function(envname = "vmsae", use_gpu = FALSE) {
   install_python()
   if (use_gpu) {
-    py_install("torch", envname = envname)
     py_install(
-      packages = "numpyro[cuda]",
+      packages = c("torch", "numpyro[cuda]"),
       pip = TRUE,
       extra_args = c("-f",
         "https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"),
       envname = envname
     )
   } else {
-    py_install("torch", envname = envname)
-    py_install("numpyro", envname = envname)
+    py_install(c("torch", "numpyro"), envname = envname)
   }
 }
 
