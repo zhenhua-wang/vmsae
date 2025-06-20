@@ -36,6 +36,8 @@ setClass("Decoder",
 #' @param lr_init Numeric. Initial learning rate. Default is \code{0.001}.
 #' @param lr_min Numeric. Minimum learning rate at the final epoch. Default is \code{1e-7}.
 #' @param verbose Logical; if \code{TRUE} (default), prints progress.
+#' @param use_gpu Boolean. Use GPU if available.
+#'        Default is `TRUE`.
 #'
 #' @return A named list containing:
 #' \item{loss}{Total training loss}
@@ -74,13 +76,13 @@ setClass("Decoder",
 train_vae <- function(W, GEOID, model_name, save_dir,
                       n_samples = 10000, batch_size = 256, epoch = 10000,
                       lr_init = 0.001, lr_min = 1e-7,
-                      verbose = TRUE) {
+                      verbose = TRUE, use_gpu = TRUE) {
   save_path <- get_save_path(model_name, save_dir)
   vae_path <- save_path$vae_path
   GEOID_path <- save_path$GEOID_path
   loss <- py$train_vae(W, vae_path,
     n_samples, batch_size, epoch,
-    lr_init, lr_min, verbose)
+    lr_init, lr_min, verbose, use_gpu)
   write.table(GEOID, file = GEOID_path,
     row.names = FALSE, col.names = FALSE)
   return(list(loss = loss[[1]], RCL = loss[[2]], KLD = loss[[3]]))

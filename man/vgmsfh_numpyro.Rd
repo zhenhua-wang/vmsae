@@ -13,7 +13,8 @@ vgmsfh_numpyro(
   model_name,
   save_dir = NULL,
   num_warmup = 1000,
-  num_samples = 1000
+  num_samples = 1000,
+  use_gpu = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ vgmsfh_numpyro(
 \item{num_warmup}{Integer. Number of warmup (burn-in) iterations. Default is 1000.}
 
 \item{num_samples}{Integer. Number of posterior samples to draw. Default is 1000.}
+
+\item{use_gpu}{Boolean. Use GPU if available.
+Default is \code{FALSE}.}
 }
 \value{
 An object of class \code{VGMSFH}, which contains:

@@ -5,10 +5,15 @@ from car_dataset import CARDataset, generate_CAR_dataset
 
 def train_vae(W, save_path,
               n_samples, batch_size,
-              epoch, lr_init, lr_min, verbose=True):
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+              epoch, lr_init, lr_min, verbose=True, use_gpu=True):
+    gpu_available = torch.cuda.is_available()
+    device = 'cuda' if use_gpu and gpu_available else 'cpu'
     if verbose:
-        print(f"VAE is trained on {device}")
+        if use_gpu and not gpu_available:
+            print("GPU is not available. VAE is trained on CPU instead.")
+        else:
+            print(f"VAE is trained on {device}.")
+            pass
         pass
     lr_gamma = pow(lr_min * (1/lr_init), 1/epoch)
     in_locations = W.shape[0]

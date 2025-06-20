@@ -14,7 +14,8 @@ train_vae(
   epoch = 10000,
   lr_init = 0.001,
   lr_min = 1e-07,
-  verbose = TRUE
+  verbose = TRUE,
+  use_gpu = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ train_vae(
 \item{lr_min}{Numeric. Minimum learning rate at the final epoch. Default is \code{1e-7}.}
 
 \item{verbose}{Logical; if \code{TRUE} (default), prints progress.}
+
+\item{use_gpu}{Boolean. Use GPU if available.
+Default is \code{TRUE}.}
 }
 \value{
 A named list containing:

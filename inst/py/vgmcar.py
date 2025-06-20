@@ -6,9 +6,6 @@ import numpy as np
 from numpyro.infer import MCMC, NUTS
 from jax.extend import backend
 
-device = backend.get_backend().platform
-numpyro.set_platform(device)
-
 def decoder_learned(z, W_in, B_in, W_out, B_out):
     h = jax.nn.elu(jnp.matmul(z, W_in) + B_in)
     x = jnp.matmul(h, W_out) + B_out
@@ -115,9 +112,15 @@ def vgmcar(args):
 
 def run_vgmcar(p_y, y, y_sigma, X, W,
                W1, B1, W2, B2,
-               num_samples, num_warmup, verbose=True):
+               num_samples, num_warmup, verbose=True, use_gpu=False):
+    device = backend.get_backend().platform
+    numpyro.set_platform(device)
     if verbose:
-        print(f"VGMSFH is run on {device}")
+        if use_gpu and device == 'cpu':
+            print("GPU is not available. VGMSFH is trained on CPU instead.")
+        else:
+            print(f"VGMSFH is trained on {device}.")
+            pass
         pass
     num_samples, num_warmup = int(num_samples), int(num_warmup)
     latent_dim = W1.shape[0]
