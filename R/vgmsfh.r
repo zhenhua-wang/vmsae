@@ -101,7 +101,7 @@ vgmsfh_numpyro <- function(y, y_sigma, X, W, GEOID,
   }
   p_y <- dim(y)[2]
   data <- sort_data(y, y_sigma, X, W, GEOID, GEOID_vae)
-  samples <- py$run_vgmcar(
+  samples <- py$run_vgmsfh(
     p_y, data$y, data$y_sigma, data$X, data$W, W_in, B_in, W_out, B_out,
     num_samples, num_warmup, verbose, use_gpu)
   other_samples <- samples[!(names(samples) %in% c("y_hat", "phi", "beta"))]
