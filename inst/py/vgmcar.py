@@ -121,6 +121,7 @@ def run_vgmcar(p_y, y, y_sigma, X, W,
         else:
             print(f"VGMSFH is trained on {device}.")
             pass
+        print("To use a different device, please restart R to reload the Python environment")
         pass
     num_samples, num_warmup = int(num_samples), int(num_warmup)
     latent_dim = W1.shape[0]
