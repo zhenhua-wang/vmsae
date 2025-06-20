@@ -85,7 +85,7 @@ install_environment <- function(envname = "vmsae", use_gpu = FALSE) {
 #'
 #' @export
 load_environment <- function(envname = "vmsae", is_conda = FALSE) {
-  vgmcar_module <- system.file("py", "vgmcar.py", package = "vmsae")
+  vgmsfh_module <- system.file("py", "vgmsfh.py", package = "vmsae")
   vae_module <- system.file("py", "vae.py", package = "vmsae")
   train_vae_module <- system.file("py", "train_vae.py", package = "vmsae")
   car_dataset_module <- system.file("py", "car_dataset.py", package = "vmsae")
@@ -95,7 +95,7 @@ load_environment <- function(envname = "vmsae", is_conda = FALSE) {
     use_virtualenv(envname, required = TRUE)
   }
   py_config()
-  source_python(vgmcar_module)
+  source_python(vgmsfh_module)
   source_python(vae_module)
   source_python(train_vae_module)
   source_python(car_dataset_module)

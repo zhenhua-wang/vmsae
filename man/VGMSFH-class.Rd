@@ -16,10 +16,10 @@ An S4 class to store results from the Variational Gaussian Markov Small Area Est
 
 \item{\code{yhat_samples}}{Array. Posterior samples of the estimated parameters.}
 
-\item{\code{spatial_samples}}{Array. Posterior samples of the estimated spatial random effects.}
+\item{\code{phi_samples}}{Array. Posterior samples of the estimated spatial random effects.}
 
 \item{\code{beta_samples}}{Array. Posterior samples of the fixed effect coefficients.}
 
-\item{\code{all_samples}}{List. Posterior samples of all parameters in the VGMSFH model.}
+\item{\code{other_samples}}{List. List of posterior samples of other parameters in the VGMSFH model.}
 }}
 

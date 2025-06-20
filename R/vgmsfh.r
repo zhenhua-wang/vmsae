@@ -7,7 +7,7 @@
 #' @slot yhat_samples Array. Posterior samples of the estimated parameters.
 #' @slot phi_samples Array. Posterior samples of the estimated spatial random effects.
 #' @slot beta_samples Array. Posterior samples of the fixed effect coefficients.
-#' @slot all_samples List. Posterior samples of all parameters in the VGMSFH model.
+#' @slot other_samples List. List of posterior samples of other parameters in the VGMSFH model.
 #'
 #' @export
 setClass("VGMSFH",
