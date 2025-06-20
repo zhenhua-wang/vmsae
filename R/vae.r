@@ -119,7 +119,7 @@ load_vae <- function(model_name, save_dir = NULL) {
   vae_model <- py$torch$load(vae_path,
     map_location = 'cpu',
     weights_only = TRUE)
-  GEOID <- read.table(GEOID_path, header = FALSE)
+  GEOID <- read.table(GEOID_path, header = FALSE, colClasses = "character")
   W_in <- vae_model$dec_input.weight$numpy()
   B_in <- vae_model$dec_input.bias$numpy()
   W_out <- vae_model$dec_out.weight$numpy()
