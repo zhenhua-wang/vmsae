@@ -49,7 +49,7 @@ An object of class \code{VGMSFH}, which contains:
 \item \code{yhat_samples}: posterior samples of the latent population process,
 \item \code{spatial_samples}: posterior samples of spatial random effects (CAR),
 \item \code{beta_samples}: posterior samples of fixed effect coefficients,
-\item \code{all_samples}: a list containing all sampled parameters, including \code{mu}, \code{delta}, and other intermediate quantities.
+\item \code{other_samples}: a list containing all sampled parameters, including \code{mu}, \code{delta}, and other intermediate quantities.
 }
 }
 \description{
