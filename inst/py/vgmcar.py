@@ -8,7 +8,6 @@ from jax.lib import xla_bridge
 
 device = xla_bridge.get_backend().platform
 numpyro.set_platform(device)
-print(f"VGMSFH is run on {device}")
 
 def decoder_learned(z, W_in, B_in, W_out, B_out):
     h = jax.nn.elu(jnp.matmul(z, W_in) + B_in)
@@ -116,7 +115,10 @@ def vgmcar(args):
 
 def run_vgmcar(p_y, y, y_sigma, X, W,
                W1, B1, W2, B2,
-               num_samples, num_warmup):
+               num_samples, num_warmup, verbose=True):
+    if verbose:
+        print(f"VGMSFH is run on {device}")
+        pass
     num_samples, num_warmup = int(num_samples), int(num_warmup)
     latent_dim = W1.shape[0]
     # check univariate case
