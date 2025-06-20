@@ -4,6 +4,11 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from numpyro.infer import MCMC, NUTS
+from jax.lib import xla_bridge
+
+device = xla_bridge.get_backend().platform
+numpyro.set_platform(device)
+print(f"VGMSFH is run on {device}")
 
 def decoder_learned(z, W_in, B_in, W_out, B_out):
     h = jax.nn.elu(jnp.matmul(z, W_in) + B_in)
