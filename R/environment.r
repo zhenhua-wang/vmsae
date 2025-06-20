@@ -63,17 +63,22 @@ install_environment <- function(envname = "vmsae") {
 #' load_environment("custom") # Load custom virtual environment
 #' }
 #'
+#' @importFrom reticulate use_condaenv
 #' @importFrom reticulate use_virtualenv
 #' @importFrom reticulate py_config
 #' @importFrom reticulate source_python
 #'
 #' @export
-load_environment <- function(envname = "vmsae") {
+load_environment <- function(envname = "vmsae", is_conda = FALSE) {
   vgmcar_module <- system.file("py", "vgmcar.py", package = "vmsae")
   vae_module <- system.file("py", "vae.py", package = "vmsae")
   train_vae_module <- system.file("py", "train_vae.py", package = "vmsae")
   car_dataset_module <- system.file("py", "car_dataset.py", package = "vmsae")
-  use_virtualenv(envname, required = TRUE)
+  if (is_conda) {
+    use_condaenv(envname, required = TRUE)
+  } else {
+    use_virtualenv(envname, required = TRUE)
+  }
   py_config()
   source_python(vgmcar_module)
   source_python(vae_module)
