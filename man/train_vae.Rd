@@ -39,8 +39,7 @@ train_vae(
 
 \item{verbose}{Logical; if \code{TRUE} (default), prints progress.}
 
-\item{use_gpu}{Boolean. Use GPU if available.
-Default is \code{TRUE}.}
+\item{use_gpu}{Boolean. Use GPU if available. Default is \code{TRUE}.}
 }
 \value{
 A named list containing:

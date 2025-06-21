@@ -39,8 +39,7 @@ vgmsfh_numpyro(
 
 \item{verbose}{Logical; if \code{TRUE} (default), prints progress.}
 
-\item{use_gpu}{Boolean. Use GPU if available.
-Default is \code{FALSE}.}
+\item{use_gpu}{Boolean. Use GPU if available. GPU support is recommended only for high-dimensional datasets (e.g., those with more than 1,000 areas). Default is \code{FALSE}.}
 }
 \value{
 An object of class \code{VGMSFH}, which contains:

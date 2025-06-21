@@ -35,8 +35,7 @@ setClass("VGMSFH",
 #' @param num_samples Integer. Number of posterior samples to draw. Default is 1000.
 #' @param num_warmup Integer. Number of warmup (burn-in) iterations. Default is 1000.
 #' @param verbose Logical; if \code{TRUE} (default), prints progress.
-#' @param use_gpu Boolean. Use GPU if available.
-#'        Default is `FALSE`.
+#' @param use_gpu Boolean. Use GPU if available. GPU support is recommended only for high-dimensional datasets (e.g., those with more than 1,000 areas). Default is `FALSE`.
 #'
 #' @return An object of class \code{VGMSFH}, which contains:
 #' \itemize{

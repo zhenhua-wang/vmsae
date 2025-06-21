@@ -36,8 +36,7 @@ setClass("Decoder",
 #' @param lr_init Numeric. Initial learning rate. Default is \code{0.001}.
 #' @param lr_min Numeric. Minimum learning rate at the final epoch. Default is \code{1e-7}.
 #' @param verbose Logical; if \code{TRUE} (default), prints progress.
-#' @param use_gpu Boolean. Use GPU if available.
-#'        Default is `TRUE`.
+#' @param use_gpu Boolean. Use GPU if available. Default is `TRUE`.
 #'
 #' @return A named list containing:
 #' \item{loss}{Total training loss}
