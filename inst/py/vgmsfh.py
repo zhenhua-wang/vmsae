@@ -52,7 +52,6 @@ def spatial_effect(n_latent, N, p_y, W_in, B_in, W_out, B_out, W):
         phi = jnp.column_stack((phii_given_phii1, phi))
         phii1 = phii_given_phii1
         pass
-    phi = numpyro.deterministic('phi', phi)
     return phi
 
 def interpolation(N, Y, sigma_y, yhat):
@@ -103,6 +102,7 @@ def vgmsfh(args):
         phi = phi.reshape(-1, 1)
         delta = delta.reshape(-1, 1)
         pass
+    phi = numpyro.deterministic('phi', phi)
     yhat = numpyro.deterministic('y_hat', mu + fixed + phi + delta)
     # imputation
     Y_vec, sigma_y_vec, yhat_vec = interpolation(N, Y, sigma_y, yhat)
